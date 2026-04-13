@@ -1,0 +1,212 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+    html, body {
+        height: 100%;
+        font-family: 'Arial', sans-serif;
+        color: #333;
+        line-height: 1.6;
+    }
+    a {
+        text-decoration: none;
+        color: #1e88e5;
+        transition: color 0.3s ease;
+    }
+    a:hover {
+        color: #1565c0;
+    }
+    .btn {
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+        font-weight: bold;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    .btn:hover {
+        transform: translateY(-2px);
+    }
+    body {
+        background: linear-gradient(135deg, #a2c2e8, #d6e4f0, #cfd8dc);
+        background-size: 400% 400%;
+        animation: bgGradient 15s ease infinite;
+    }
+    @keyframes bgGradient {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        75%{ background-position: 50% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    .container {
+        background: rgba(240, 248, 255, 0.95);
+        backdrop-filter: blur(8px);
+        border-radius: 16px;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+        padding: 2.5rem;
+        margin-top: 4rem;
+        transition: all 0.3s ease-in-out;
+    }
+    h2 {
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        color: #1a237e;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        font-size: 2rem;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        border-bottom: 2px solid #1e88e5;
+        padding-bottom: 0.5rem;
+    }
+    .list-group-item {
+        border-radius: 8px;
+        margin-bottom: 0.5rem;
+        transition: background-color 0.3s ease;
+    }
+    .list-group-item:hover {
+        background-color: rgba(0, 0, 0, 0.05);
+    }
+    .list-group-item-success {
+        background-color: #d4edda;
+        color: #155724;
+    }
+    .list-group-item-light {
+        background-color: #f8f9fa;
+        color: #212529;
+    }
+    .form-label {
+        font-weight: 600;
+        color: #303f9f;
+        margin-bottom: 0.5rem;
+    }
+    .form-control {
+        border-radius: 10px;
+        border: 1px solid #ced4da;
+        transition: all 0.3s ease;
+        background-color: #f5faff;
+        padding: 0.5rem 0.75rem;
+    }
+    .form-control:focus {
+        border-color: #1e88e5;
+        box-shadow: 0 0 0 0.15rem rgba(30, 136, 229, 0.3);
+        outline: none;
+        background-color: #ffffff;
+        color: #212529;
+    }
+    .btn-success {
+        background-color: #66bb6a;
+        border-color: #66bb6a;
+    }
+    .btn-success:hover {
+        background-color: #57a05c;
+        border-color: #57a05c;
+    }
+    .btn-outline-primary {
+        color: #1e88e5;
+        border-color: #1e88e5;
+    }
+    .btn-outline-primary:hover {
+        color: #1565c0;
+        border-color: #1565c0;
+        background-color: rgba(30, 136, 229, 0.1);
+    }
+    .btn-outline-warning {
+        color: #ff9800;
+        border-color: #ff9800;
+    }
+    .btn-outline-warning:hover {
+        color: #e65100;
+        border-color: #e65100;
+        background-color: rgba(255, 152, 0, 0.1);
+    }
+    .btn-outline-danger {
+        color: #d32f2f;
+        border-color: #d32f2f;
+    }
+    .btn-outline-danger:hover {
+        color: #b71c1c;
+        border-color: #b71c1c;
+        background-color: rgba(211, 47, 47, 0.1);
+    }
+</style>
+
+<div class="container mt-4">
+    <h2 class="mb-4">📅 Planner Dashboard</h2>
+
+    <!-- ✅ Add New Task Form -->
+    <form method="POST" class="card p-4 shadow-sm mb-4 border-0 bg-light">
+        {{ form.hidden_tag() }}
+        <div class="row g-3">
+            <div class="col-md-6">
+                {{ form.task_name.label(class="form-label") }}
+                {{ form.task_name(class="form-control", placeholder="e.g. Complete Python project") }}
+            </div>
+            <div class="col-md-6">
+                {{ form.due_date.label(class="form-label") }}
+                {{ form.due_date(class="form-control") }}
+            </div>
+            <div class="col-md-12">
+                {{ form.description.label(class="form-label") }}
+                {{ form.description(class="form-control") }}
+            </div>
+            <div class="col-md-3">
+                {{ form.submit(class="btn btn-success w-100 mt-2") }}
+            </div>
+        </div>
+    </form>
+
+    <!-- ✅ Task List Section -->
+    <h4 class="mb-3">📝 Your Tasks</h4>
+
+    {% if tasks %}
+        <ul class="list-group shadow-sm">
+            {% for task in tasks %}
+                <li class="list-group-item d-flex justify-content-between align-items-start
+                    {% if task.completed %}list-group-item-success{% else %}list-group-item-light{% endif %}">
+
+                    <div class="ms-2 me-auto">
+                        <div class="fw-bold">
+                            {{ task.task_name }}
+                            {% if task.completed %}
+                                <span class="badge bg-success ms-2">✔ Completed</span>
+                            {% else %}
+                                <span class="badge bg-warning text-dark ms-2">⏳ Pending</span>
+                            {% endif %}
+                        </div>
+                        {% if task.description %}
+                            <small class="d-block text-muted">{{ task.description }}</small>
+                        {% endif %}
+                        <small class="text-muted">📅 Due: {{ task.due_date.strftime('%d %b %Y') }}</small>
+                    </div>
+
+                    <!-- ✅ Actions -->
+                    <div class="d-flex align-items-center">
+                        <a href="{{ url_for('planner.edit_task', task_id=task.id) }}" 
+                           class="btn btn-sm btn-outline-warning me-2" title="Edit task">✏️</a>
+
+                        {% if not task.completed %}
+                            <form method="POST" action="{{ url_for('planner.complete_task', task_id=task.id) }}" class="me-2">
+                                <button type="submit" class="btn btn-sm btn-outline-primary" title="Mark as completed">✔️</button>
+                            </form>
+                        {% endif %}
+
+                        <form method="POST" action="{{ url_for('planner.delete_task', task_id=task.id) }}" 
+                              onsubmit="return confirm('Are you sure you want to delete this task?');">
+                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete task">🗑️</button>
+                        </form>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <div class="alert alert-secondary text-center" role="alert">
+            🚫 No tasks found. Start by adding one above!
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+
+    
+.card {
+    border: none !important;
+    border-radius: 20px !important;
+    background: linear-gradient(135deg, #d4f1ff, #a8e6ff, #89d6fb) !important;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2) !important;
+    backdrop-filter: blur(8px);
+    transition: transform 0.2s ease-in-out;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+
+h2 {
+    font-weight: 700;
+    color: #004080 !important;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.1);
+}
+
+
+.lead {
+    font-size: 1.1rem;
+    color: #333 !important;
+}
+
+
+.spinner-border {
+    animation: spinGlow 1s linear infinite;
+}
+
+@keyframes spinGlow {
+    0% {
+        box-shadow: 0 0 10px #007bff;
+    }
+    50% {
+        box-shadow: 0 0 25px #00c6ff;
+    }
+    100% {
+        box-shadow: 0 0 10px #007bff;
+    }
+}
+
+
+.alert {
+    border-radius: 12px !important;
+    font-weight: 600;
+    background: linear-gradient(135deg, #ccefff, #e6faff) !important;
+    border: none;
+    color: #004080 !important;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, #6c757d, #9da3a8);
+    border: none;
+    border-radius: 25px;
+    font-weight: 600;
+    padding: 10px 20px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(108,117,125,0.3);
+}
+
+.btn-secondary:hover {
+    background: linear-gradient(135deg, #495057, #6c757d);
+    transform: scale(1.05);
+}
+
+</style>
+
+<div class="container mt-5 text-center">
+
+    <!-- Card with alert -->
+    <div class="card shadow-lg border-0 rounded-3 p-4" 
+         style="background: linear-gradient(135deg, #d4f1ff, #a8e6ff, #89d6fb);">
+        <div class="card-body">
+            <h2 class="fw-bold text-primary mb-3">⏳ Voting In Progress</h2>
+            <p class="lead text-dark mb-4">
+                Please wait until the voting ends.<br>
+                Results will be available once all students and CRs have voted
+                and the session is officially closed by Admin.
+            </p>
+
+            <!-- Animated Waiting Spinner -->
+            <div class="spinner-border text-primary mb-3" role="status" style="width: 4rem; height: 4rem;">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+
+            <div class="alert alert-info mt-3 fw-bold">
+                🔔 Please wait for vote ending
+            </div>
+
+            <a href="{{ url_for('dashboard.index') }}" class="btn btn-secondary mt-3">
+                ⬅️ Back to Dashboard
+            </a>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+

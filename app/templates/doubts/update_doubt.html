@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-3">Update Doubt</h2>
+
+  <form method="POST">
+    {% if current_user.role == 'student' %}
+      <!-- Student can update only their own Question -->
+      <div class="mb-3">
+        <label for="question" class="form-label">Your Doubt</label>
+        <textarea class="form-control" id="question" name="question" rows="3" required>{{ doubt.question }}</textarea>
+      </div>
+
+      {% if doubt.answer %}
+        <!-- If answer already exists, show it as read-only -->
+        <div class="mb-3">
+          <label for="answer" class="form-label">Answer (Read Only)</label>
+          <textarea class="form-control" id="answer" rows="3" readonly>{{ doubt.answer }}</textarea>
+        </div>
+      {% endif %}
+    {% endif %}
+
+    {% if current_user.role in ['admin', 'cr'] %}
+      <!-- Admin/CR can only update the Answer -->
+      <div class="mb-3">
+        <label for="answer" class="form-label">Answer</label>
+        <textarea class="form-control" id="answer" name="answer" rows="3" required>{{ doubt.answer }}</textarea>
+      </div>
+    {% endif %}
+
+    <button type="submit" class="btn btn-primary">💾 Save Changes</button>
+    <a href="{{ url_for('doubts.view_doubts') }}" class="btn btn-secondary">⬅ Back</a>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+{% block title %}My Groups{% endblock %}
+
+{% block content %}
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    height: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+    line-height: 1.6;
+    background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
+    background-size: 400% 400%;
+    animation: bgGradient 20s ease infinite;
+}
+
+@keyframes bgGradient {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+.container {
+    max-width: 1000px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+h3 {
+    font-weight: bold;
+    color: #1a237e;
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 16px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: none;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.card-title {
+    font-weight: bold;
+    color: #1a237e;
+}
+
+.card-text {
+    color: #555;
+}
+
+.btn {
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.btn-primary {
+    background-color: #1a237e;
+    border-color: #1a237e;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #0d47a1;
+    border-color: #0d47a1;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.btn-success {
+    background-color: #4caf50;
+    border-color: #4caf50;
+    color: white;
+}
+
+.btn-success:hover {
+    background-color: #43a047;
+    border-color: #388e3c;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+    border-color: #545b62;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.alert {
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.alert-warning {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.alert-info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+}
+
+.btn-close {
+    margin-left: 1rem;
+}
+
+.text-muted {
+    color: #6c757d;
+    text-align: center;
+    margin-top: 2rem;
+    font-size: 1.05rem;
+}
+
+.text-muted a {
+    color: #1e88e5;
+    text-decoration: none;
+}
+
+.text-muted a:hover {
+    color: #1565c0;
+    text-decoration: underline;
+}
+</style>
+<div class="container mt-4">
+    <h3 class="mb-4">My Study Groups</h3>
+    
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    {% if groups %}
+        <div class="row">
+            {% for group in groups %}
+                <div class="col-md-4 mb-4">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ group.name }}</h5>
+                            <p class="card-text">{{ group.description }}</p>
+                            <p><strong>Code:</strong> {{ group.group_code }}</p>
+                            <a href="{{ url_for('group_bp.view_group', group_id=group.id) }}" class="btn btn-primary btn-sm">View Group</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-muted">You're not part of any group yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

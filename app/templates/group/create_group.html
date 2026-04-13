@@ -1,0 +1,166 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    html, body {
+        height: 100%;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #333;
+        line-height: 1.6;
+        background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
+        background-size: 400% 400%;
+        animation: bgGradient 20s ease infinite;
+    }
+
+    @keyframes bgGradient {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+    }
+
+    .container {
+        max-width: 650px;
+        margin: 3rem auto;
+        padding: 2.5rem;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    h2 {
+        font-weight: bold;
+        color: #1a237e;
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #303f9f;
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+
+    .form-control {
+        border-radius: 12px;
+        border: 1px solid #ced4da;
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+
+    .form-control:focus {
+        border-color: #1a73e8;
+        box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.15);
+        outline: none;
+    }
+
+    .input-group {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .input-group .btn {
+        padding: 0.5rem 1rem;
+        border-radius: 10px;
+        font-weight: 500;
+        background-color: #1e88e5;
+        color: #fff;
+        border: none;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .input-group .btn:hover {
+        background-color: #1565c0;
+        transform: translateY(-1px);
+    }
+
+    .text-danger {
+        font-size: 0.9rem;
+        margin-top: 0.25rem;
+        color: #d32f2f;
+    }
+
+    .btn-primary {
+        background: linear-gradient(90deg, #43cea2, #185a9d);
+        border: none;
+        border-radius: 14px;
+        font-weight: 600;
+        color: #fff;
+        padding: 0.75rem 2rem;
+        transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    .btn-primary:hover {
+        background: linear-gradient(90deg, #2bc0e4, #1f4c81);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+    }
+
+    .mb-3 {
+        margin-bottom: 1.5rem;
+    }
+</style>
+
+<div class="container mt-5">
+    <h2>Create Study Group</h2>
+
+    <form method="POST" action="{{ url_for('group_bp.create_group') }}">
+        {{ form.hidden_tag() }}
+
+        <!-- Group Name -->
+        <div class="mb-3">
+            {{ form.name.label(class="form-label") }}
+            {{ form.name(class="form-control") }}
+            {% for error in form.name.errors %}
+                <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <!-- Description -->
+        <div class="mb-3">
+            {{ form.description.label(class="form-label") }}
+            {{ form.description(class="form-control") }}
+            {% for error in form.description.errors %}
+                <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <!-- Group Password -->
+        <div class="mb-3">
+            {{ form.group_password.label(class="form-label") }}
+            <div class="input-group">
+                {{ form.group_password(class="form-control", id="password") }}
+                <button type="button" class="btn" onclick="togglePassword()">Show</button>
+            </div>
+            {% for error in form.group_password.errors %}
+                <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <!-- Submit Button -->
+        <div class="text-center">
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
+    </form>
+</div>
+
+<script>
+function togglePassword() {
+    const input = document.getElementById("password");
+    if (input.type === "password") {
+        input.type = "text";
+    } else {
+        input.type = "password";
+    }
+}
+</script>
+{% endblock %}

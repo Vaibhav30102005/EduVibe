@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+  body {
+    background: linear-gradient(135deg, #a1c4fd, #c2e9fb); /* Sky blue gradient glossy */
+    background-attachment: fixed;
+    font-family: 'Segoe UI', Arial, sans-serif;
+  }
+
+  h2 {
+    font-weight: 700;
+    color: #003366;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+  }
+
+  .card {
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
+  }
+
+  .card-title {
+    color: #2a5298;
+    font-size: 1.3rem;
+    font-weight: 600;
+  }
+
+  .card-text strong {
+    color: #1e3c72;
+  }
+
+  .btn-primary {
+    background: linear-gradient(90deg, #1e3c72, #2a5298);
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    padding: 8px 16px;
+    transition: 0.3s ease;
+  }
+
+  .btn-primary:hover {
+    background: linear-gradient(90deg, #2a5298, #1e3c72);
+    transform: scale(1.05);
+  }
+
+  .alert {
+    border-radius: 12px;
+    font-weight: 500;
+  }
+
+  .badge {
+    font-size: 0.9rem;
+    padding: 8px 12px;
+    border-radius: 8px;
+  }
+
+  .btn-success {
+    background: linear-gradient(90deg, #28a745, #218838);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: 0.3s ease;
+  }
+
+  .btn-success:hover {
+    background: linear-gradient(90deg, #218838, #28a745);
+    transform: scale(1.05);
+  }
+</style>
+<div class="container mt-4">
+
+  <h2 class="text-center mb-4">CR Nominees</h2>
+  <hr>
+
+  {% if not session or not session.is_active %}
+    <div class="alert alert-info text-center">
+      🚫 Voting has not started yet. Please wait for Admin to start.
+    </div>
+  {% elif session.is_active and not session.has_ended %}
+    <div class="alert alert-warning text-center">
+      ⚠️ Voting is currently in progress. Please wait for vote ending.
+    </div>
+  {% endif %}
+
+  <!-- Nominee List -->
+  {% if nominees %}
+    <div class="row">
+      {% for nominee in nominees %}
+        <div class="col-md-6 mb-4">
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <h5 class="card-title">{{ nominee.name }}</h5>
+              <p class="card-text">
+                <strong>Roll No:</strong> {{ nominee.roll_no }} <br>
+                <strong>Branch:</strong> {{ nominee.branch }} <br>
+                <strong>Semester:</strong> {{ nominee.semester }} <br>
+              </p>
+              {% if nominee.cr_nominations and nominee.cr_nominations[0].manifesto %}
+                <p><strong>Manifesto:</strong> {{ nominee.cr_nominations[0].manifesto }}</p>
+              {% endif %}
+
+              {% if session and session.is_active and not session.has_ended %}
+                {% if not has_voted and not already_nominated %}
+                  <!-- Vote Form -->
+                  <form method="POST" action="{{ url_for('cr_bp.nominations') }}">
+                    <input type="hidden" name="nominee_id" value="{{ nominee.cr_nominations[0].id }}">
+                    <button type="submit" class="btn btn-primary btn-sm">Vote</button>
+                  </form>
+                {% elif has_voted %}
+                  <span class="badge bg-success">✅ You have already voted</span>
+                {% elif already_nominated %}
+                  <span class="badge bg-info">ℹ️ Nominees cannot vote</span>
+                {% endif %}
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-secondary text-center">
+      No nominees yet.
+    </div>
+  {% endif %}
+
+  {% if session and session.has_ended %}
+    <div class="text-center mt-4">
+      <a href="{{ url_for('cr_bp.results') }}" class="btn btn-success">
+        📊 View Final Results
+      </a>
+    </div>
+  {% endif %}
+
+</div>
+{% endblock %}

@@ -1,0 +1,204 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+ *{
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    html, body {
+        height: 100%;
+        font-family: 'Arial', sans-serif;
+        color: #333;
+        line-height: 1.6;
+    }
+
+    a {
+        text-decoration: none;
+        color: #1e88e5;
+        transition: color 0.3s ease;
+    }
+
+    a:hover {
+        color: #1565c0;
+    }
+
+    .btn {
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+        font-weight: bold;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+ }
+
+    body {
+        background: linear-gradient(135deg, #e0f7fa, #e1f5fe, #e3f2fd);
+        background-size: 400% 400%;
+        animation: bgGradient 15s ease infinite;
+    }
+
+    @keyframes bgGradient {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        75%{ background-position: 50% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    .container {
+        background: rgba(240, 248, 255, 0.95);
+        backdrop-filter: blur(8px);
+        border-radius: 16px;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+        padding: 2.5rem;
+        margin-top: 4rem;
+        transition: all 0.3s ease-in-out;
+    }
+
+    h2 {
+        font-weight: 700;
+        color: #1a237e;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        margin-bottom: 1.5rem;
+        text-align: center;
+        font-size: 2rem;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        border-bottom: 2px solid #1e88e5;
+        padding-bottom: 0.5rem;
+        transition: color 0.3s ease;
+
+
+    }
+
+    .form-group-colored {
+        background: #e3f2fd;
+        border-radius: 12px;
+        padding: 1rem 1.2rem;
+        margin-bottom: 1.2rem;
+        box-shadow: inset 0 0 0.5rem rgba(0, 0, 0, 0.03);
+        border: 1px solid #bbdefb;
+    }
+
+
+
+    .form-label {
+        font-weight: 600;
+        color: #303f9f;
+        margin-bottom: 0.5rem;
+        padding: 0% 0.2rem;
+    }
+
+    .form-control {
+        border-radius: 10px;
+        border: 1px solid #ced4da;
+        transition: all 0.3s ease;
+        box-shadow: none;
+        background-color: #f5faff;
+        padding: 0.5rem 0.75rem;
+    }
+
+    .form-control:focus {
+        border-color: #1e88e5;
+        box-shadow: 0 0 0 0.15rem rgba(30, 136, 229, 0.3);
+        outline: none;
+        background-color: #ffffff;
+        color: #212529;
+
+    }
+</style>
+
+<div class="container mt-4">
+    <h2 class="mb-3">Notes Section</h2>
+
+    {% if user.role == 'admin' %}
+    <!-- 🔍 Admin Filter Form -->
+    <form method="GET" action="{{ url_for('notes.view_notes') }}" class="row g-3 mb-4">
+        <div class="col-md-4">
+            <label class="form-label">Branch</label>
+            <select name="branch" class="form-select">
+                <option value="">All</option>
+                {% for branch in branches %}
+                    <option value="{{ branch }}" {% if request.args.get('branch') == branch %}selected{% endif %}>{{ branch }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Semester</label>
+            <select name="semester" class="form-select">
+                <option value="">All</option>
+                {% for sem in semesters %}
+                    <option value="{{ sem }}" {% if request.args.get('semester') == sem %}selected{% endif %}>{{ sem }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-4 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary w-100">🔍 Filter</button>
+        </div>
+    </form>
+    {% endif %}
+
+    {% if user.role in ['student', 'cr'] %}
+    <!-- ➕ Upload Note Button -->
+    <div class="mb-4 text-end">
+        <a href="{{ url_for('notes.upload_note') }}" class="btn btn-success">📤 Upload New Note</a>
+    </div>
+    {% endif %}
+
+    <!-- 📄 Notes Display -->
+    {% if notes %}
+    <div class="row">
+        {% for note in notes %}
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header d-flex justify-content-between">
+                    <strong>{{ note.title }}</strong>
+                    <span class="badge bg-secondary">{{ note.branch }} | Sem {{ note.semester }}</span>
+                </div>
+                <div class="card-body">
+                    {% if note.content %}
+                        <p>{{ note.content }}</p>
+                    {% endif %}
+                    
+                    {% if note.filename %}
+                    <div class="d-flex gap-2 mb-2">
+                        <!-- View File -->
+                        <a href="{{ url_for('static', filename='uploads/' ~ note.filename) }}"
+                           target="_blank"
+                           class="btn btn-outline-primary btn-sm">
+                            👁️ View
+                        </a>
+                        <!-- Download File -->
+                        <a href="{{ url_for('static', filename='uploads/' ~ note.filename) }}"
+                           download
+                           class="btn btn-outline-success btn-sm">
+                            ⬇️ Download
+                        </a>
+                    </div>
+                    {% endif %}
+
+                    {% if note.user_id == user.id %}
+                    <!-- 🗑️ Delete Form -->
+                    <form method="POST" action="{{ url_for('notes.delete_note', note_id=note.id) }}"
+                          onsubmit="return confirm('Are you sure you want to delete this note?');">
+                        {{ delete_form.hidden_tag() }}
+                        <button type="submit" class="btn btn-outline-danger btn-sm">🗑️ Delete</button>
+                    </form>
+                    {% endif %}
+                </div>
+                <div class="card-footer text-muted small">
+                    Uploaded on {{ note.created_at.strftime('%d-%m-%Y %I:%M %p') }}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-warning text-center">⚠️ No notes available for selected criteria.</div>
+    {% endif %}
+
+</div>
+{% endblock %}

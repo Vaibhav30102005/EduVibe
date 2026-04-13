@@ -1,0 +1,652 @@
+{% extends 'base.html' %}
+
+{% block title %}My Portfolio{% endblock %}
+
+{% block content %}
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    html, body {
+        height: 100%;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #333;
+        line-height: 1.6;
+    }
+
+    body {
+        background: linear-gradient(135deg, #73bec8, #e1f5fe, #3c7ba8a2);
+        background-size: 400% 400%;
+        animation: bgGradient 15s ease infinite;
+    }
+
+    @keyframes bgGradient {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    .container {
+        max-width: 800px;
+        margin: auto;
+        padding: 2rem;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 16px;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    h2 {
+        font-weight: bold;
+        color: #1a237e;
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        font-weight: bold;
+        color: #303f9f;
+    }
+    .form-control {
+        border-radius: 8px;
+        border: 1px solid #ced4da;
+        padding: 0.5rem 1rem;
+        margin-bottom: 1rem;
+        transition: all 0.3s ease-in-out;
+    }
+    .form-control:focus {
+        border-color: #448690;
+        box-shadow: 0 0 0 0.2rem rgba(72, 201, 176, 0.25);
+    }
+    .btn-primary {
+        background: linear-gradient(90deg, #c1dbf1, #b0c5de);
+        border: none;
+        border-radius: 12px;
+        font-weight: 600;
+        padding: 0.75rem 1.5rem;
+        transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+        background: linear-gradient(90deg, #88a8cc, #9eb4d5);
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+        transform: translateY(-1px);
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 0.75rem 1.5rem;
+        border-radius: 12px;
+        font-weight: 600;
+        color: #fff;
+        background-color: #1e88e5;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+    .btn:hover {
+        background-color: #1565c0;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+        transform: translateY(-1px);
+    }
+    .alert {
+        margin-top: 1rem;
+        padding: 1rem;
+        background-color: #fff3cd;
+        border: 1px solid #ffeeba;
+        border-radius: 8px;
+        color: #856404;
+    }
+    .alert a {
+        color: #1e88e5;
+        text-decoration: underline;
+    }
+    .alert a:hover {
+        color: #1565c0;
+    }
+
+
+    .text-center a {
+        color: #1e88e5;
+        font-weight: 500;
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+    .text-center a:hover {
+        color: #0d47a1;
+        text-decoration: underline;
+    }
+    .mb-3 {
+        margin-bottom: 1.5rem;
+    }
+    .mt-4 {
+        margin-top: 2rem;
+    }
+    .card {
+        border-radius: 12px;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+        margin-bottom: 1.5rem;
+    }
+    .card-body {
+        padding: 1.5rem;
+    }
+    .card-body img {
+        max-width: 180px;
+        border-radius: 50%;
+        border: 2px solid #448690;
+    }
+    .card-body p {
+        margin-bottom: 0.5rem;
+        font-size: 1rem;
+        color: #555;
+    }
+    .card-body p strong {
+        color: #1a237e;
+    }
+    .card-body .fw-bold {
+        font-weight: bold;
+        color: #1a237e;
+    }
+    .rounded-circle {
+        border-radius: 50%;
+    }
+    .border {
+        border: 2px solid #448690;
+    }
+    .img-thumbnail {
+        max-width: 100%;
+        height: auto;
+        border-radius: 12px;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+    }
+    .text-muted {
+        color: #6c757d;
+        font-size: 0.9rem;
+    }
+    .text-danger {
+        color: #dc3545;
+        font-size: 0.9rem;
+    }
+    .fade-in {
+        animation: fadeIn 0.5s ease-in-out;
+    }
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    .btn-close {
+        color: #000;
+        opacity: 0.5;
+    }
+    .btn-close:hover {
+        opacity: 1;
+    }
+    .btn-close:focus {
+        outline: none;
+        box-shadow: none;
+    }
+
+    .btn-close:focus-visible {
+        outline: 2px solid #1e88e5;
+        outline-offset: 2px;
+    }
+    .btn-close:focus:not(:focus-visible) {
+        outline: none;
+    }
+    .card-header {
+        background: linear-gradient(90deg, #1e3c72, #2a5298);
+        color: #fff;
+        padding: 1rem;
+        border-radius: 12px 12px 0 0;
+        font-weight: bold;
+        text-align: center;
+    }
+    .card-footer {
+        background: #f8f9fa;
+        padding: 1rem;
+        border-radius: 0 0 12px 12px;
+        text-align: center;
+    }
+    .card-footer a {
+        color: #1e88e5;
+        text-decoration: none;
+        font-weight: 500;
+    }
+    .card-footer a:hover {
+        color: #0d47a1;
+        text-decoration: underline;
+    }
+    .card-footer a:focus {
+        outline: none;
+        color: #0d47a1;
+    }
+    .card-footer a:focus-visible {
+        outline: 2px solid #1e88e5;
+        outline-offset: 2px;
+    }
+    .card-footer a:focus:not(:focus-visible) {
+        outline: none;
+    }
+    .card-header h3 {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+    .card-header p {
+        margin: 0.5rem 0 0;
+        font-size: 1rem;
+        color: #e3f2fd;
+    }
+    .card-header img {
+        max-width: 50px;
+        border-radius: 50%;
+        margin-right: 10px;
+    }
+    .card-header .profile-name {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #fff;
+    }
+    .card-header .profile-role {
+        font-size: 0.9rem;
+        color: #e3f2fd;
+    }
+    .card-header .profile-link {
+        color: #1e88e5;
+        text-decoration: none;
+        font-weight: 500;
+    }
+    .card-header .profile-link:hover {
+        color: #0d47a1;
+        text-decoration: underline;
+    }
+    .card-header .profile-link:focus {
+        outline: none;
+        color: #0d47a1;
+    }
+    .card-header .profile-link:focus-visible {
+        outline: 2px solid #1e88e5;
+        outline-offset: 2px;
+    }
+    .card-header .profile-link:focus:not(:focus-visible) {
+        outline: none;
+    }
+    .card-header .profile-link i {
+        margin-right: 5px;
+    }
+    .card-header .profile-link:hover i {
+        color: #0d47a1;
+    }
+    .card-header .profile-link:focus i {
+        outline: none;
+        color: #0d47a1;
+    }
+
+    .card-header .profile-link:focus-visible i {
+        outline: 2px solid #1e88e5;
+        outline-offset: 2px;
+    }
+    .card-header .profile-link:focus:not(:focus-visible) i {
+        outline: none;
+    }
+    .card-header .profile-link i {
+        color: #1e88e5;
+        transition: color 0.2s ease;
+    }
+    .card-header .profile-link i:hover {
+        color: #0d47a1;
+    }
+    .card-header .profile-link i:focus {
+        outline: none;
+        color: #0d47a1;
+    }
+    .card-header .profile-link i:focus-visible {
+        outline: 2px solid #1e88e5;
+        outline-offset: 2px;
+    }
+
+    .card-header .profile-link i:focus:not(:focus-visible) {
+        outline: none;
+    }
+    .card-header .profile-link i {
+        color: #1e88e5;
+        transition: color 0.2s ease;
+    }
+    .card-header .profile-link i:hover {
+        color: #0d47a1;
+    }
+    .card-header .profile-link i:focus {
+        outline: none;
+        color: #0d47a1;
+    }
+    .card-header .profile-link i:focus-visible {
+        outline: 2px solid #1e88e5;
+        outline-offset: 2px;
+    }
+    .card-header .profile-link i:focus:not(:focus-visible) {
+        outline: none;
+    }
+    .card-header .profile-link i {
+        color: #1e88e5;
+        transition: color 0.2s ease;
+    }
+    .card-header .profile-link i:hover {
+        color: #0d47a1;
+    }
+    .card-header .profile-link i:focus {
+        outline: none;
+        color: #0d47a1;
+    }
+    .card-header .profile-link i:focus-visible {
+        outline: 2px solid #1e88e5;
+        outline-offset: 2px;
+    }
+    .card-header .profile-link i:focus:not(:focus-visible) {
+        outline: none;
+    }
+    .card-header .profile-link i {
+        color: #1e88e5;
+        transition: color 0.2s ease;
+    }
+    .card-header .profile-link i:hover {
+        color: #0d47a1;
+    }
+    .card-header .profile-link i:focus {
+        outline: none;
+        color: #0d47a1;
+    }
+    .card-header .profile-link i:focus-visible {
+        outline: 2px solid #1e88e5;
+        outline-offset: 2px;
+    }
+    .card-header .profile-link i:focus:not(:focus-visible) {
+        outline: none;
+    }
+    .card-header .profile-link i {
+        color: #1e88e5;
+        transition: color 0.2s ease;
+    }
+    .card-header .profile-link i:hover {
+        color: #0d47a1;
+    }
+    .card-header .profile-link i:focus {
+        outline: none;
+        color: #0d47a1;
+    }
+    .card-header .profile-link i:focus-visible {
+        outline: 2px solid #1e88e5;
+        outline-offset: 2px;
+    }
+    .card-header .profile-link i:focus:not(:focus-visible) {
+        outline: none;
+    }
+    .card-header .profile-link i {
+        color: #1e88e5;
+        transition: color 0.2s ease;
+    }
+    .card-header .profile-link i:hover {
+        color: #0d47a1;
+    }
+    .card-header .profile-link i:focus {
+        outline: none;
+        color: #0d47a1;
+    }
+    .card-header .profile-link i:focus-visible {
+        outline: 2px solid #1e88e5;
+        outline-offset: 2px;
+    }
+    .card-header .profile-link i:focus:not(:focus-visible) {
+        outline: none;
+    }
+    .card-header .profile-link i {
+        color: #1e88e5;
+        transition: color 0.2s ease;
+    }
+    .card-header .profile-link i:hover {
+        color: #0d47a1;
+    }
+    .card-header .profile-link i:focus {
+        outline: none;
+        color: #0d47a1;
+    }
+    .card-header .profile-link i:focus-visible {
+        outline: 2px solid #1e88e5;
+        outline-offset: 2px;
+    }
+    .card-header .profile-link i:focus:not(:focus-visible) {
+        outline: none;
+    }
+    .card-header .profile-link i {
+        color: #1e88e5;
+        transition: color 0.2s ease;
+    }
+    .card-header .profile-link i:hover {
+        color: #0d47a1;
+    }
+    .card-header .profile-link i:focus {
+        outline: none;
+        color: #0d47a1;
+    }
+    .card-header .profile-link i:focus-visible {
+        outline: 2px solid #1e88e5;
+        outline-offset: 2px;
+    }
+    .card-header .profile-link i:focus:not(:focus-visible) {
+        outline: none;
+    }
+    .card-header .profile-link i {
+        color: #1e88e5;
+        transition: color 0.2s ease;
+    }
+    .card-header .profile-link i:hover {
+        color: #0d47a1;
+    }
+    .card-header .profile-link i:focus {
+        outline: none;
+        color: #0d47a1;
+    }
+    .card-header .profile-link i:focus-visible {
+        outline: 2px solid #1e88e5;
+        outline-offset: 2px;
+    }
+    .card-header .profile-link i:focus:not(:focus-visible) {
+        outline: none;
+    }
+    .card-header .profile-link i {
+        color: #1e88e5;
+        transition: color 0.2s ease;
+    }
+
+    .card-header .profile-link i:hover {
+        color: #0d47a1;
+    }
+    .card-header .profile-link i:focus {
+        outline: none;
+        color: #0d47a1;
+    }
+    .card-header .profile-link i:focus-visible {
+        outline: 2px solid #1e88e5;
+        outline-offset: 2px;
+    }
+    .card-header .profile-link i:focus:not(:focus-visible) {
+        outline: none;
+    }
+    .card-header .profile-link i {
+        color: #1e88e5;
+        transition: color 0.2s ease;
+    }
+    .card-header .profile-link i:hover {
+        color: #0d47a1;
+    }
+    .card-header .profile-link i:focus {
+        outline: none;
+        color: #0d47a1;
+    }
+    .card-header .profile-link i:focus-visible {
+        outline: 2px solid #1e88e5;
+        outline-offset: 2px;
+    }
+
+    .card-header .profile-link i:focus:not(:focus-visible) {
+        outline: none;
+    }
+    .card-header .profile-link i {
+        color: #1e88e5;
+        transition: color 0.2s ease;
+    }
+    .card-header .profile-link i:hover {
+        color: #0d47a1;
+    }
+    .card-header .profile-link i:focus {
+        outline: none;
+        color: #0d47a1;
+    }
+    .card-header .profile-link i:focus-visible {
+        outline: 2px solid #1e88e5;
+        outline-offset: 2px;
+    }
+    .card-header .profile-link i:focus:not(:focus-visible) {
+        outline: none;
+    }
+    .card-header .profile-link i {
+        color: #1e88e5;
+        transition: color 0.2s ease;
+    }
+    .card-header .profile-link i:hover {
+        color: #0d47a1;
+    }
+    .card-header .profile-link i:focus {
+        outline: none;
+        color: #0d47a1;
+    }
+    .card-header .profile-link i:focus-visible {
+        outline: 2px solid #1e88e5;
+        outline-offset: 2px;
+    }
+    .card-header .profile-link i:focus:not(:focus-visible) {
+        outline: none;
+    }
+    .card-header .profile-link i {
+        color: #1e88e5;
+        transition: color 0.2s ease;
+    }
+    .card-header .profile-link i:hover {
+        color: #0d47a1;
+    }
+    .card-header .profile-link i:focus {
+        outline: none;
+        color: #0d47a1;
+    }
+    .card-header .profile-link i:focus-visible {
+        outline: 2px solid #1e88e5;
+        outline-offset: 2px;
+    }
+    .card-header .profile-link i:focus:not(:focus-visible) {
+        outline: none;
+    }
+    .card-header .profile-link i {
+        color: #1e88e5;
+        transition: color 0.2s ease;
+    }
+    .card-header .profile-link i:hover {
+        color: #0d47a1;
+    }
+    .card-header .profile-link i:focus {
+        outline: none;
+        color: #0d47a1;
+    }
+    .card-header .profile-link i:focus-visible {
+        outline: 2px solid #1e88e5;
+        outline-offset: 2px;
+    }
+    .card-header .profile-link i:focus:not(:focus-visible) {
+        outline: none;
+    }
+    .card-header .profile-link i {
+        color: #1e88e5;
+        transition: color 0.2s ease;
+    }
+
+
+</style>
+<div class="container mt-4">
+  <h2>🧑‍🎓 My Portfolio</h2>
+
+  {% if portfolio %}
+    <div class="card shadow-sm mt-3">
+      <div class="card-body">
+        <div class="row">
+          <!-- Profile Picture -->
+          <div class="col-md-3 text-center">
+            {% if portfolio.profile_pic %}
+              <img src="{{ url_for('static', filename=portfolio.profile_pic.replace('static/', '')) }}" class="rounded-circle border" width="150" height="150" alt="Profile Picture"
+                   class="img-thumbnail rounded mb-2"
+                   alt="Profile Picture"
+                   style="max-width: 180px;">
+            {% else %}
+              <img src="{{ url_for('static', filename='images/default_profile.png') }}"
+                   class="img-thumbnail rounded mb-2"
+                   alt="Default Profile"
+                   style="max-width: 180px;">
+            {% endif %}
+            <p class="fw-bold mt-2">{{ current_user.name }}</p>
+          </div>
+
+          <!-- Portfolio Info -->
+          <div class="col-md-9">
+            <p><strong>📚 Branch:</strong> {{ current_user.branch or 'N/A' }}</p>
+            <p><strong>🎓 Semester:</strong> {{ current_user.semester or 'N/A' }}</p>
+            <p><strong>🏆 Achievements:</strong> {{ portfolio.achievements or 'N/A' }}</p>
+            <p><strong>🛠️ Skills:</strong> {{ portfolio.skills or 'N/A' }}</p>
+            <p><strong>🎯 Interests:</strong> {{ portfolio.interests or 'N/A' }}</p>
+
+            {% if portfolio.github_link %}
+              <p><strong>🐙 GitHub:</strong>
+                <a href="{{ portfolio.github_link }}" target="_blank">{{ portfolio.github_link }}</a>
+              </p>
+            {% endif %}
+
+            {% if portfolio.linkedin_link %}
+              <p><strong>🔗 LinkedIn:</strong>
+                <a href="{{ portfolio.linkedin_link }}" target="_blank">{{ portfolio.linkedin_link }}</a>
+              </p>
+            {% endif %}
+
+            <p><strong>📄 Resume:</strong>
+              {% if portfolio.resume %}
+                <a href="{{ url_for('static', filename='uploads/portfolio/' ~ portfolio.resume) }}" target="_blank">View Resume</a>
+              {% else %}
+                Not uploaded
+              {% endif %}
+            </p>
+
+            <p><strong>📁 Certificates:</strong>
+              {% if portfolio.certificates %}
+                <a href="{{ url_for('static', filename='uploads/portfolio/' ~ portfolio.certificates) }}" target="_blank">View Certificates</a>
+              {% else %}
+                Not uploaded
+              {% endif %}
+            </p>
+
+            <a href="{{ url_for('portfolio.edit_portfolio') }}" class="btn btn-primary mt-3">
+              ✏️ Edit Portfolio
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <div class="alert alert-warning mt-4">
+      No portfolio data available.
+      <a href="{{ url_for('portfolio.edit_portfolio') }}" class="alert-link">Click here</a> to add your portfolio.
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

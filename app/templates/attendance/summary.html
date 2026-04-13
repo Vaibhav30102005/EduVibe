@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+body {
+  background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%);
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+.container {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.08);
+  padding: 36px 28px;
+  margin-top: 40px;
+}
+
+h2 {
+  color: #2d3748;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.05);
+  margin-bottom: 20px;
+}
+
+.form-label {
+  font-weight: 600;
+  color: #4a5568;
+}
+
+.form-select, .btn {
+  border-radius: 10px;
+}
+
+.btn-primary {
+  background: linear-gradient(90deg, #667eea 0%, #5a67d8 100%);
+  border: none;
+  font-weight: 600;
+  padding: 10px 18px;
+  transition: background 0.3s ease;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(90deg, #5a67d8 0%, #667eea 100%);
+}
+
+.btn-success {
+  background: linear-gradient(90deg, #38a169 0%, #2f855a 100%);
+  border: none;
+  font-weight: 600;
+  padding: 10px 18px;
+  border-radius: 10px;
+}
+
+.btn-success:hover {
+  background: linear-gradient(90deg, #2f855a 0%, #38a169 100%);
+}
+
+.table {
+  margin-top: 28px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #f9fafb;
+  box-shadow: 0 2px 8px rgba(60,72,88,0.06);
+}
+
+.table th {
+  background: linear-gradient(90deg, #cbd5e1 0%, #e2e8f0 100%);
+  color: #2d3748;
+  font-weight: 600;
+  border-bottom: 2px solid #cbd5e1;
+}
+
+.table td {
+  color: #2d3748;
+  vertical-align: middle;
+}
+
+.table-hover tbody tr:hover {
+  background: #ebf4fb;
+}
+
+.alert-warning {
+  border-radius: 10px;
+  font-weight: 500;
+  background: linear-gradient(90deg, #fffbea 0%, #fefcbf 100%);
+  color: #b7791f;
+  border: 1px solid #f6e05e;
+  box-shadow: 0 1px 4px rgba(255, 193, 7, 0.08);
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 20px 12px;
+  }
+  h2 {
+    font-size: 1.4rem;
+  }
+  .table th, .table td {
+    font-size: 0.95rem;
+    padding: 0.5rem;
+  }
+}
+</style>
+
+<div class="container">
+  <h2>📋 Attendance Summary</h2>
+
+  <!-- ✅ Only Admin gets filter form -->
+  <form method="get" class="row g-3 mb-4">
+    {% if current_user.role == 'admin' %}
+      <div class="col-md-4">
+        <label class="form-label">Branch</label>
+        <select class="form-select" name="branch">
+          <option value="">All</option>
+          {% for branch in branches %}
+            <option value="{{ branch }}" {% if branch == selected_branch %}selected{% endif %}>{{ branch }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Semester</label>
+        <select class="form-select" name="semester">
+          <option value="">All</option>
+          {% for sem in semesters %}
+            <option value="{{ sem }}" {% if sem == selected_semester %}selected{% endif %}>{{ sem }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-4 d-flex align-items-end">
+        <button type="submit" class="btn btn-primary w-100">Filter</button>
+      </div>
+    {% endif %}
+  </form>
+
+  {% if students %}
+    <!-- ✅ Download PDF Button (CR & Admin only) -->
+    {% if current_user.role in ['admin', 'cr'] %}
+    <div class="mb-3 text-end">
+      <a href="{{ url_for('attendance.download_pdf') }}" class="btn btn-success">
+        📥 Download PDF
+      </a>
+    </div>
+    {% endif %}
+
+    <table class="table table-bordered table-hover">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Roll No</th>
+          <th>Branch</th>
+          <th>Semester</th>
+          <th>Present</th>
+          <th>Total Days</th>
+          <th>Attendance %</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for student in students %}
+        <tr>
+          <td>{{ student.name }}</td>
+          <td>{{ student.roll_no }}</td>
+          <td>{{ student.branch }}</td>
+          <td>{{ student.semester }}</td>
+          <td>{{ student.present }}</td>
+          <td>{{ student.total }}</td>
+          <td>{{ student.percentage|round(2) }}%</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <div class="alert alert-warning mt-3">
+      No students found for the selected criteria.
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,186 @@
+{% extends 'base.html' %}
+{% block title %}Create Group{% endblock %}
+
+{% block content %}
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    html, body {
+        height: 100%;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #333;
+        line-height: 1.6;
+        background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
+        background-size: 400% 400%;
+        animation: bgGradient 20s ease infinite;
+    }
+
+    @keyframes bgGradient {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+    }
+
+    .container {
+        max-width: 600px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 16px;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    h2 {
+        font-weight: bold;
+        color: #1a237e;
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        font-weight: bold;
+        color: #303f9f;
+    }
+
+    .form-control, .form-select {
+        border-radius: 8px;
+        border: 1px solid #ced4da;
+        padding: 0.5rem 1rem;
+        margin-bottom: 1rem;
+        width: 100%;
+        transition: box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: #1a237e;
+        box-shadow: 0 0 0 3px rgba(26, 35, 126, 0.15);
+        outline: none;
+    }
+
+    .btn-success {
+        background: linear-gradient(90deg, #4caf50, #2e7d32);
+        border: none;
+        font-weight: bold;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        color: white;
+        transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    .btn-success:hover {
+        background: linear-gradient(90deg, #43a047, #1b5e20);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+        font-weight: bold;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        color: #fff;
+        transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+        border-color: #545b62;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+    }
+
+    .card {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 16px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .card-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #1a237e;
+        margin-bottom: 1rem;
+    }
+
+    .card-body {
+        padding: 1.5rem;
+        background-color: rgba(255, 255, 255, 0.95);
+        border-radius: 12px;
+        box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.04), 0 4px 14px rgba(0, 0, 0, 0.2);
+        transition: box-shadow 0.2s ease, transform 0.2s ease;
+        transform: translateY(-1px);
+    }
+</style>
+
+<div class="container mt-4">
+    <h2 class="mb-4">➕ Create a New Group</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="{{ url_for('group.create_group') }}">
+        {{ form.hidden_tag() }}
+
+        <div class="mb-3">
+            {{ form.name.label(class="form-label") }}
+            {{ form.name(class="form-control") }}
+            {% if form.name.errors %}
+                <div class="text-danger small">
+                    {% for error in form.name.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            {{ form.description.label(class="form-label") }}
+            {{ form.description(class="form-control") }}
+        </div>
+
+        <div class="mb-3">
+            {{ form.group_code.label(class="form-label") }}
+            {{ form.group_code(class="form-control") }}
+            {% if form.group_code.errors %}
+                <div class="text-danger small">
+                    {% for error in form.group_code.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            {{ form.password.label(class="form-label") }}
+            {{ form.password(class="form-control") }}
+            {% if form.password.errors %}
+                <div class="text-danger small">
+                    {% for error in form.password.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="d-flex gap-2">
+            {{ form.submit(class="btn btn-success") }}
+            <a href="{{ url_for('group.list_groups') }}" class="btn btn-secondary">Back</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

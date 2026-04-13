@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+{% block title %}CR Voting Results{% endblock %}
+
+{% block content %}
+
+<style>
+  /* 🔹 Overall Page Styling */
+  body {
+    background-color: #bbd8f5;
+    font-family: 'Segoe UI', sans-serif;
+  }
+
+  /* 🔹 Filter Section */
+  .filter-card {
+    background: #ffffff;
+    border-left: 5px solid #0d6efd;
+  }
+
+  /* 🔹 Chart Card */
+  .chart-card {
+    border-radius: 12px;
+    background: #ffffff;
+  }
+
+  /* 🔹 Table Styling */
+  .custom-results-table {
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .custom-results-table thead {
+    background: linear-gradient(90deg, #0d6efd, #0dcaf0);
+  }
+  .custom-results-table thead th {
+    color: #141010 !important;
+    font-size: 15px;
+    text-transform: uppercase;
+    padding: 12px;
+  }
+  .custom-results-table tbody tr:hover {
+    background-color: #f1f9ff;
+    transition: 0.3s ease-in-out;
+  }
+
+  /* 🔹 Buttons */
+  .btn {
+    border-radius: 8px;
+    font-size: 14px;
+  }
+  .btn-success {
+    background: linear-gradient(45deg, #28a745, #20c997);
+    border: none;
+  }
+  .btn-success:hover {
+    background: linear-gradient(45deg, #20c997, #28a745);
+    transform: scale(1.03);
+  }
+
+  .btn-outline-secondary:hover,
+  .btn-outline-danger:hover {
+    transform: scale(1.05);
+  }
+
+  /* 🔹 Alert Box */
+  .alert {
+    border-radius: 10px;
+    font-size: 15px;
+  }
+
+  /* 🔹 Heading */
+  h2 {
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+  }
+</style>
+
+
+<div class="container mt-5">
+  <h2 class="mb-4 text-center text-primary fw-bold">📊 CR Voting Results</h2>
+
+  {% if current_user.is_authenticated and current_user.role in ['student', 'cr'] %}
+    <div class="text-center mb-4">
+      <a href="{{ url_for('cr_bp.nominate') }}" class="btn btn-success fw-semibold px-4 shadow-sm">
+        <i class="bi bi-person-plus-fill me-1"></i> Nominate Yourself
+      </a>
+    </div>
+  {% endif %}
+
+  <!-- 🔹 Filters & Export -->
+  <form method="get" class="row g-3 mb-4 filter-card p-3 rounded shadow-sm">
+    <div class="col-md-3">
+      <select name="branch" class="form-select">
+        <option value="">All Branches</option>
+        {% for b in ['CSE', 'ECE', 'ME', 'CE', 'EE', 'AU'] %}
+          <option value="{{ b }}" {% if selected_branch == b %}selected{% endif %}>{{ b }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-3">
+      <select name="semester" class="form-select">
+        <option value="">All Semesters</option>
+        {% for s in ['1', '2', '3', '4', '5', '6'] %}
+          <option value="{{ s }}" {% if selected_semester == s %}selected{% endif %}>Semester {{ s }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-3">
+      <button type="submit" class="btn btn-primary w-100 shadow-sm">🔍 Filter</button>
+    </div>
+    <div class="col-md-3 text-end">
+      <a href="{{ url_for('cr_bp.export_results_csv') }}" class="btn btn-outline-secondary me-2 shadow-sm">📄 CSV</a>
+      <a href="{{ url_for('cr_bp.export_results_pdf') }}" class="btn btn-outline-danger shadow-sm">🧾 PDF</a>
+    </div>
+  </form>
+
+  {% if results %}
+    
+    <!-- 🔹 Results Table -->
+    <div class="table-responsive">
+      <table class="table table-bordered align-middle shadow-sm custom-results-table">
+        <thead class="text-center fw-semibold">
+          <tr>
+            <th>S.No.</th>
+            <th>Candidate Name</th>
+            <th>Roll Number</th>
+            <th>Branch</th>
+            <th>Semester</th>
+            <th>Votes</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for result in results %}
+          <tr>
+            <th class="text-center">{{ loop.index }}</th>
+            <td>{{ result.name or 'N/A' }}</td>
+            <td>{{ result.roll_no or 'N/A' }}</td>
+            <td>{{ result.branch or 'N/A' }}</td>
+            <td>{{ result.semester or 'N/A' }}</td>
+            <td class="text-center"><span class="fw-bold text-success">{{ result.votes if result.votes is not none else 0 }}</span></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="alert alert-warning text-center fw-semibold mt-4">
+      No candidates nominated yet.
+    </div>
+  {% endif %}
+</div>
+
+
+
+
+{% endblock %}

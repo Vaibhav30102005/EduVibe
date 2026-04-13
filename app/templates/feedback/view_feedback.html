@@ -1,0 +1,194 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+    body {
+        background: linear-gradient(to right, #a18cd1, #fbc2eb);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #333;
+    }
+
+    h2 {
+        text-align: center;
+        font-size: 2.5rem;
+        color: #fff;
+        margin-bottom: 40px;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .table-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        animation: fadeIn 0.6s ease;
+    }
+
+    table.table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 2px solid #6a11cb;
+        margin: 0;
+    }
+
+    .table thead {
+        background: linear-gradient(to right, #6a11cb, #2575fc);
+        transition: all 0.3s ease;
+    }
+
+    .table thead:hover {
+        transform: scale(1.01);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    .table th {
+        padding: 16px 20px;
+        text-align: left;
+        color: black;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        border: 1px solid #ddd;
+        transition: all 0.3s ease;
+    }
+
+    .table td {
+        padding: 14px 20px;
+        border: 1px solid #e0e0e0;
+        font-size: 15px;
+        transition: all 0.3s ease;
+    }
+
+    .table tbody tr:nth-child(even) {
+        background: #f9f9fc;
+    }
+
+    /* 👇 Row hover gradient border + popup */
+    .table tbody tr:hover {
+        background: #eef5ff;
+        transform: scale(1.01);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        border-left: 4px solid transparent;
+        border-image: linear-gradient(to bottom, #6a11cb, #2575fc) 1;
+    }
+
+    .table tbody tr {
+        transition: all 0.3s ease;
+    }
+
+    .table td:last-child {
+        word-wrap: break-word;
+        max-width: 250px;
+    }
+
+    /* ⭐ Ratings style */
+    .stars {
+        color: #ffb400;
+        font-size: 1.1rem;
+    }
+
+    /* Tooltip */
+    .tooltip-text {
+        position: relative;
+        cursor: pointer;
+        display: inline-block;
+    }
+
+    .tooltip-text::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        bottom: 125%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 0, 0, 0.8);
+        color: #fff;
+        padding: 6px 10px;
+        border-radius: 6px;
+        white-space: pre-wrap;
+        max-width: 250px;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s;
+        font-size: 0.85rem;
+        z-index: 10;
+    }
+
+    .tooltip-text:hover::after {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    p {
+        text-align: center;
+        font-size: 1.2rem;
+        margin-top: 40px;
+        color: #fff;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<h2>Student Feedback</h2>
+
+{% if feedbacks %}
+<div class="table-container">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Student Name</th>
+                <th>Branch</th>
+                <th>Semester</th>
+                <th>Course</th>
+                <th>Instructor</th>
+                <th>Rating</th>
+                <th>Comments</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for fb in feedbacks %}
+            <tr>
+                <td>{{ fb.student.name }}</td>
+                <td>{{ fb.student.branch }}</td>
+                <td>{{ fb.student.semester }}</td>
+                <td>{{ fb.course_name }}</td>
+                <td>{{ fb.instructor_name }}</td>
+                <td>
+                    <span class="stars">
+                        {% for i in range(fb.rating) %}
+                            ★
+                        {% endfor %}
+                        {% for i in range(5 - fb.rating) %}
+                            ☆
+                        {% endfor %}
+                    </span>
+                </td>
+                <td>
+                    {% if fb.comments %}
+                        <span class="tooltip-text" data-tooltip="{{ fb.comments }}">
+                            {{ fb.comments[:25] ~ ('...' if fb.comments|length > 25 else '') }}
+                        </span>
+                    {% else %}
+                        —
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<p>No feedback submitted yet.</p>
+{% endif %}
+
+{% endblock %}

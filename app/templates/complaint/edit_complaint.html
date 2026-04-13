@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    body {
+        background: linear-gradient(135deg, #e0f7fa 0%, #b3e5fc 100%);
+        font-family: 'Poppins', sans-serif;
+        min-height: 100vh;
+        transition: background 0.5s cubic-bezier(.68,-0.55,.27,1.55);
+    }
+
+    .container {
+        max-width: 650px;
+        background: #fff;
+        padding: 30px;
+        border-radius: 18px;
+        box-shadow: 0 8px 24px rgba(0, 180, 255, 0.12), 0 1.5px 6px rgba(0, 180, 255, 0.08);
+        margin-top: 50px;
+        transition: box-shadow 0.3s cubic-bezier(.68,-0.55,.27,1.55), transform 0.3s cubic-bezier(.68,-0.55,.27,1.55);
+        backdrop-filter: blur(2px);
+    }
+
+    .container:active {
+        transform: translateX(30px) scale(1.02) rotate(-1deg);
+        box-shadow: 0 16px 40px rgba(0, 180, 255, 0.22), 0 4px 16px rgba(0, 180, 255, 0.18);
+    }
+
+    h2 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #2d3748;
+        margin-bottom: 22px;
+        text-align: center;
+        background: linear-gradient(90deg, #38bdf8 0%, #7fdbff 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: 1px;
+        filter: drop-shadow(0 2px 4px rgba(56,189,248,0.12));
+    }
+
+    label {
+        font-weight: 600;
+        color: #4a5568;
+        letter-spacing: 0.5px;
+    }
+
+    .form-control {
+        border-radius: 12px;
+        padding: 12px;
+        border: 1.5px solid #b3e5fc;
+        margin-bottom: 18px;
+        font-size: 1.05rem;
+        background: rgba(224, 247, 250, 0.7);
+        transition: box-shadow 0.3s cubic-bezier(.68,-0.55,.27,1.55), border-color 0.3s, background 0.3s;
+        box-shadow: 0 1px 4px rgba(56,189,248,0.07);
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #38bdf8;
+        box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.18);
+        background: #e0f7fa;
+        animation: focusPulse 0.6s;
+    }
+
+    @keyframes focusPulse {
+        0% { box-shadow: 0 0 0 0 rgba(56,189,248,0.18);}
+        70% { box-shadow: 0 0 0 8px rgba(56,189,248,0.10);}
+        100% { box-shadow: 0 0 0 4px rgba(56,189,248,0.18);}
+    }
+
+    .btn-primary {
+        background: linear-gradient(90deg, #38bdf8 0%, #7fdbff 100%);
+        border: none;
+        padding: 12px 24px;
+        font-size: 1.08rem;
+        font-weight: 600;
+        border-radius: 12px;
+        transition: all 0.3s cubic-bezier(.68,-0.55,.27,1.55), box-shadow 0.3s;
+        color: #fff;
+        box-shadow: 0 2px 8px rgba(56, 189, 248, 0.15);
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+    }
+
+    .btn-primary:hover {
+        background: linear-gradient(90deg, #7fdbff 0%, #38bdf8 100%);
+        transform: translateY(-2px) scale(1.06) rotate(-1deg);
+        box-shadow: 0 8px 24px rgba(56, 189, 248, 0.25);
+        filter: brightness(1.10);
+        animation: btnGlow 0.7s;
+    }
+
+    @keyframes btnGlow {
+        0% { box-shadow: 0 2px 8px rgba(56,189,248,0.15);}
+        60% { box-shadow: 0 12px 32px rgba(56,189,248,0.30);}
+        100% { box-shadow: 0 8px 24px rgba(56,189,248,0.25);}
+    }
+
+    .btn-secondary {
+        background: linear-gradient(90deg, #e0f7fa 0%, #cbd5e0 100%);
+        border: none;
+        padding: 12px 24px;
+        font-size: 1.08rem;
+        font-weight: 600;
+        border-radius: 12px;
+        transition: all 0.3s cubic-bezier(.68,-0.55,.27,1.55), box-shadow 0.3s;
+        color: #2d3748;
+        box-shadow: 0 2px 8px rgba(224, 247, 250, 0.12);
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+    }
+
+    .btn-secondary:hover {
+        background: linear-gradient(90deg, #cbd5e0 0%, #e0f7fa 100%);
+        transform: translateY(-2px) scale(1.06) rotate(1deg);
+        box-shadow: 0 8px 24px rgba(224, 247, 250, 0.18);
+        filter: brightness(1.08);
+        animation: btnGlowSec 0.7s;
+    }
+
+    @keyframes btnGlowSec {
+        0% { box-shadow: 0 2px 8px rgba(224,247,250,0.12);}
+        60% { box-shadow: 0 12px 32px rgba(224,247,250,0.22);}
+        100% { box-shadow: 0 8px 24px rgba(224,247,250,0.18);}
+    }
+</style>
+
+<div class="container">
+  <h2>✏ Edit Complaint</h2>
+  <form method="POST">
+    <div class="mb-3">
+      <label for="title" class="form-label">Complaint Title</label>
+      <input type="text" class="form-control" id="title" name="title" value="{{ complaint.title }}" required>
+    </div>
+    <div class="mb-3">
+      <label for="description" class="form-label">Complaint Description</label>
+      <textarea class="form-control" id="description" name="description" rows="4" required>{{ complaint.description }}</textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">💾 Update Complaint</button>
+    <a href="{{ url_for('complaint.view_my_complaints') }}" class="btn btn-secondary ms-2">Cancel</a>
+  </form>
+</div>
+{% endblock %}

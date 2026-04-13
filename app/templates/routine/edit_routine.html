@@ -1,0 +1,232 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    background: linear-gradient(135deg, #73bec8, #e1f5fe, #3c7ba8a2);
+    background-size: 400% 400%;
+    animation: bgGradient 15s ease infinite;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+    line-height: 1.6;
+    min-height: 100vh;
+    justify-content: center;
+    align-items: center;
+  }
+
+  @keyframes bgGradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    75% { background-position: 50% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .container {
+    max-width: 600px;
+    width: 100%;
+    background: rgba(240, 248, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 18px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.2);
+    padding: 3rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .container:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25);
+  }
+
+  h2 {
+    font-weight: 700;
+    font-size: 2rem;
+    color: #1a237e;
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .form-label {
+    font-weight: 600;
+    color: #303f9f;
+    margin-bottom: 0.6rem;
+    display: block;
+    font-size: 0.95rem;
+  }
+
+  input, select, textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    border: 1px solid #c5cae9;
+    background-color: #f0f4ff;
+    margin-bottom: 1.2rem;
+    font-size: 1rem;
+    transition: all 0.25s ease;
+  }
+
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #1a73e8;
+    background-color: #fff;
+    box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.2);
+  }
+
+  button {
+    width: 100%;
+    padding: 0.9rem;
+    background-color: #1a73e8;
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+
+  button:hover {
+    background-color: #0d47a1;
+    transform: scale(1.03);
+  }
+  button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  .btn-secondary {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    padding: 0.75rem;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  .btn-secondary:hover {
+    background-color: #5a6268;
+    transform: scale(1.03);
+  }
+  .btn-secondary:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+
+  .card {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    margin-bottom: 2rem;
+  }
+  .card-title {
+    font-weight: 700;
+    color: #1a237e;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+  .card-body {
+    padding: 1.5rem;
+  }
+  .card-body form {
+    display: flex;
+    flex-direction: column;
+  }
+  .card-body form .mb-3 {
+    margin-bottom: 1.2rem;
+  }
+  .card-body form .form-control {
+    border-radius: 10px;
+    border: 1px solid #ced4da;
+    transition: all 0.3s ease;
+    box-shadow: none;
+    background-color: #f5faff;
+    padding: 0.5rem 0.75rem;
+  }
+  .card-body form .form-control:focus {
+    border-color: #1e88e5;
+    box-shadow: 0 0 0 0.15rem rgba(30, 136, 229, 0.3);
+    outline: none;
+    background-color: #ffffff;
+    color: #212529;
+  }
+  .text-danger {
+    color: #d32f2f;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+  }
+  .text-center {
+    text-align: center;
+    margin-top: 1.5rem;
+  }
+  .text-center a {
+    color: #1e88e5;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .text-center a:hover {
+    color: #1565c0;
+    text-decoration: underline;
+  }
+  .text-center a:focus {
+    outline: none;
+    color: #0d47a1;
+  }
+  .fade-in {
+    animation: fadeInUp 0.6s ease-out;
+  }
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+
+</style>
+
+<div class="container mt-4">
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h4 class="card-title mb-4">✏️ Edit Routine Entry</h4>
+
+      <form method="post">
+        <div class="mb-3">
+          <label for="day" class="form-label">Day</label>
+          <input type="text" name="day" id="day" class="form-control" value="{{ routine.day }}" required>
+        </div>
+        <div class="mb-3">
+          <label for="time" class="form-label">Time</label>
+          <input type="text" name="time" id="time" class="form-control" value="{{ routine.time }}" required>
+        </div>
+        <div class="mb-3">
+          <label for="subject" class="form-label">Subject</label>
+          <input type="text" name="subject" id="subject" class="form-control" value="{{ routine.subject }}" required>
+        </div>
+        <div class="mb-3">
+          <label for="faculty" class="form-label">Faculty</label>
+          <input type="text" name="faculty" id="faculty" class="form-control" value="{{ routine.faculty }}">
+        </div>
+        <div class="mb-3">
+          <label for="room" class="form-label">Room</label>
+          <input type="text" name="room" id="room" class="form-control" value="{{ routine.room }}" required>
+        </div>
+        <button type="submit" class="btn btn-success">Update</button>
+        <a href="{{ url_for('routine.view_routine') }}" class="btn btn-secondary">Cancel</a>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

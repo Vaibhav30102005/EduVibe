@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+  body {
+    background: linear-gradient(120deg, #a7c7e7 0%, #f8fafc 100%);
+    transition: background 0.8s cubic-bezier(.4,0,.2,1);
+    font-family: 'Segoe UI', Arial, sans-serif;
+  }
+  .container {
+    max-width: 720px;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.05);
+    padding: 40px 30px;
+    margin-top: 40px;
+  }
+  h2 {
+    font-weight: 700;
+    font-size: 1.75rem;
+    color: #1e293b;
+    margin-bottom: 1.5rem;
+  }
+  .list-group-item {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    padding: 20px;
+  }
+  .list-group-item:hover {
+    background: #edf2f7;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  }
+  h5 {
+    color: #2d3748;
+    font-weight: 600;
+    font-size: 1.15rem;
+    margin-bottom: 4px;
+  }
+  small.text-muted {
+    font-size: 0.85rem;
+    color: #718096;
+  }
+  p {
+    color: #4a5568;
+    margin-top: 0.5rem;
+  }
+  .badge {
+    font-size: 0.85rem;
+    padding: 0.4em 0.9em;
+    border-radius: 8px;
+    font-weight: 600;
+  }
+  .bg-success {
+    background: linear-gradient(90deg, #38b2ac 0%, #68d391 100%);
+    color: #fff !important;
+  }
+  .bg-warning {
+    background: linear-gradient(90deg, #f6e05e 0%, #ecc94b 100%);
+    color: #1a202c !important;
+  }
+  .bg-light {
+    background: #f1f5f9 !important;
+    border-left: 4px solid #3b82f6;
+  }
+  .shadow-sm {
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.07);
+  }
+  .alert-info {
+    background: #bee3f8;
+    color: #2b6cb0;
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    font-weight: 500;
+  }
+  .btn-action {
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .btn-edit {
+    background: linear-gradient(90deg, #60a5fa 0%, #3b82f6 100%);
+    color: white;
+    border: none;
+  }
+  .btn-edit:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(59, 130, 246, 0.4);
+  }
+  .btn-delete {
+    background: linear-gradient(90deg, #f87171 0%, #ef4444 100%);
+    color: white;
+    border: none;
+  }
+  .btn-delete:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(239, 68, 68, 0.4);
+  }
+
+  /* ✅ New badges for visibility */
+  .badge-visibility {
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 0.5rem;
+    padding: 0.3em 0.6em;
+  }
+  .badge-admin {
+    background: #dc3545;
+    color: #fff;
+  }
+  .badge-cr {
+    background: #0d6efd;
+    color: #fff;
+  }
+</style>
+
+<div class="container">
+  <h2>📋 My Complaints</h2>
+
+  {% if complaints %}
+    <div class="list-group">
+      {% for complaint in complaints %}
+        <div class="list-group-item mb-3 shadow-sm">
+          <h5>{{ complaint.title }}</h5>
+          <small class="text-muted">{{ complaint.timestamp.strftime('%d %b %Y %I:%M %p') }}</small>
+          <p>{{ complaint.description }}</p>
+
+          <p class="mb-1">
+            Status: 
+            {% if complaint.status == 'Resolved' %}
+              <span class="badge bg-success">Resolved</span>
+            {% else %}
+              <span class="badge bg-warning">Pending</span>
+            {% endif %}
+          </p>
+
+          <!-- ✅ Show visibility badge -->
+          <p class="mb-1">
+            Visibility: 
+            {% if complaint.visibility == 'admin_only' %}
+              <span class="badge-visibility badge-admin">Admin Only</span>
+            {% else %}
+              <span class="badge-visibility badge-cr">CR + Admin</span>
+            {% endif %}
+          </p>
+
+          {% if complaint.status == 'Resolved' and complaint.response %}
+            <div class="mt-3 bg-light p-3 rounded">
+              <strong>Response:</strong>
+              <p class="mb-0">{{ complaint.response }}</p>
+            </div>
+          {% endif %}
+
+          {% if complaint.status != 'Resolved' %}
+            <div class="mt-3 d-flex gap-2">
+              <a href="{{ url_for('complaint.edit_complaint', complaint_id=complaint.id) }}" class="btn btn-action btn-edit">✏ Edit</a>
+              <form action="{{ url_for('complaint.delete_complaint', complaint_id=complaint.id) }}" method="POST" style="display:inline;">
+                <button type="submit" class="btn btn-action btn-delete" onclick="return confirm('Are you sure you want to delete this complaint?')">🗑 Delete</button>
+              </form>
+            </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-info">You haven't submitted any complaints yet.</div>
+  {% endif %}
+</div>
+{% endblock %}

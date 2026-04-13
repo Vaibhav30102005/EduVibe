@@ -1,0 +1,275 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+  :root {
+    --bg-light: linear-gradient(135deg, #e0eafc, #cfdef3);
+    --bg-dark: linear-gradient(135deg, #1e1e2f, #2c2c3c);
+    --card-bg-light: rgba(255, 255, 255, 0.3);
+    --card-bg-dark: rgba(30, 30, 30, 0.5);
+    --text-light: #2c3e50;
+    --text-dark: #f8f9fa;
+  }
+
+  body {
+    background: var(--bg-light);
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 0;
+    transition: background 0.4s ease;
+    color: var(--text-light);
+  }
+
+  body.dark-mode {
+    background: var(--bg-dark);
+    color: var(--text-dark);
+  }
+
+  .btn {
+    border-radius: 12px !important;
+    font-weight: 600;
+    padding: 0.75rem;
+    font-size: 1rem;
+    background: linear-gradient(to right, #74ebd5, #9face6);
+    color: #fff;
+    border: none;
+    transition: all 0.25s ease-in-out;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+
+  .btn:hover {
+    transform: scale(1.03);
+    background: linear-gradient(to right, #9face6, #74ebd5);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  body.dark-mode .btn {
+    background: linear-gradient(to right, #6a11cb, #2575fc);
+  }
+
+  .alert {
+    border-radius: 1rem;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+  }
+
+  .container {
+    background: var(--card-bg-light);
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: background 0.4s ease;
+  }
+
+  body.dark-mode .container {
+    background: var(--card-bg-dark);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .row .col-md-3 {
+    display: flex;
+    justify-content: center;
+  }
+
+  .card-wrapper {
+    border-radius: 20px;
+    padding: 1rem;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    background: linear-gradient(145deg, #ffffff, #f1f3f5);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
+  }
+
+  .card-wrapper:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.12);
+  }
+
+  body.dark-mode .card-wrapper {
+    background: linear-gradient(145deg, #2c2c3c, #1e1e2f);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+  }
+
+  /* Individual Card Colors - still optional */
+  .card-notes { background: linear-gradient(135deg, #d0ebff, #a5d8ff); }
+  .card-planner { background: linear-gradient(135deg, #d3f9d8, #b2f2bb); }
+  .card-group { background: linear-gradient(135deg, #e5dbff, #d0bfff); }
+  .card-attendance { background: linear-gradient(135deg, #c5f6fa, #99e9f2); }
+  .card-feedback { background: linear-gradient(135deg, #ffe066, #ffd43b); }
+  .card-doubt { background: linear-gradient(135deg, #f1f3f5, #dee2e6); }
+  .card-complaint { background: linear-gradient(135deg, #ffc9c9, #ffa8a8); }
+  .card-routine { background: linear-gradient(135deg, #d0ebff, #a5d8ff); }
+  .card-portfolio { background: linear-gradient(135deg, #e6fcf5, #c3fae8); }
+  .card-leave { background: linear-gradient(135deg, #d3f9d8, #b2f2bb); }
+  .card-applications { background: linear-gradient(135deg, #e9ecef, #ced4da); }
+
+  h2 {
+    font-weight: 700;
+  }
+
+  hr {
+    border-top: 2px solid #ced4da;
+    width: 60px;
+    margin: 1rem auto;
+  }
+
+  @media (max-width: 768px) {
+    .row .col-md-3 {
+      flex: 0 0 100%;
+      max-width: 100%;
+    }
+  }
+
+  #darkToggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    padding: 10px 14px;
+    background: #222;
+    color: #fff;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+  }
+
+  /* Welcome section */
+  .welcome-card {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #2c3e50;
+    border-radius: 1.5rem;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.07);
+    transition: 0.3s ease-in-out;
+  }
+
+  body.dark-mode .welcome-card {
+    background: linear-gradient(135deg, #1f1f2e, #2a2a3c);
+    color: #f8f9fa;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .styled-hr {
+    width: 80px;
+    border-top: 3px solid #adb5bd;
+    margin: 1rem auto;
+  }
+</style>
+
+
+<div class="container mt-4">
+  <div class="welcome-card text-center mb-4 p-4">
+    <h2 class="mb-2">👋 Welcome, {{ user.name }}!</h2>
+    <p class="lead">Your role: <strong>{{ role }}</strong></p>
+    <hr class="styled-hr">
+  </div>
+
+  {% if role == 'Student' %}
+    <div class="alert alert-info">
+      📚 You can view and download notes, manage planner tasks, and join study groups.
+    </div>
+    <div class="row">
+      {% for route, label, cls, cardcls in [
+    ('notes.view_notes', '📘 View Notes', 'btn-primary', 'card-notes'),
+    ('planner.view_planner', '🗓️ Planner', 'btn-success', 'card-planner'),
+    ('group_bp.list_groups', '👥 Group Study', 'btn-secondary', 'card-group'),
+    ('attendance.index', '📊 My Attendance', 'btn-info', 'card-attendance'),
+    ('doubt.post_doubt', 'Post Doubt', 'btn-outline-primary', 'card-doubt'),
+    ('doubt.view_doubts', 'View My Doubts', 'btn-outline-secondary', 'card-doubt'),
+    ('complaint.submit_complaint', '📝 Submit Complaint', 'btn-outline-danger', 'card-complaint'),
+    ('complaint.view_my_complaints', '📋 My Complaints', 'btn-outline-dark', 'card-complaint'),
+    ('routine.view_routine', '📅 View Routine', 'btn-outline-primary', 'card-routine'),
+    ('portfolio.view_portfolio', '🧾 My Portfolio', 'btn-outline-primary', 'card-portfolio'),
+    ('leave.apply_leave', '📝 Apply Leave', 'btn-outline-success', 'card-leave'),
+    ('leave.view_my_leaves', '📁 My Applications', 'btn-outline-secondary', 'card-applications'),
+    ('feedback.submit_feedback', '<i class="bi bi-pencil-square me-2"></i> Give Feedback', 'btn-success shadow-sm', 'card-feedback')
+] %}
+
+      <div class="col-md-3 mb-3">
+        <div class="card-wrapper {{ cardcls }}">
+          <a href="{{ url_for(route) }}" class="btn {{ cls }} w-100">{{ label|safe }}</a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+  {% elif role == 'Class Representative' %}
+    <div class="alert alert-warning">
+      📝 As a CR, you can upload notes and help manage academic content for your branch.
+    </div>
+    <div class="row">
+      {% for route, label, cls, cardcls in [
+    ('notes.upload_note', '⬆️ Upload Notes', 'btn-warning', 'card-notes'),
+    ('notes.view_notes', '📘 View Notes', 'btn-primary', 'card-notes'),
+    ('planner.view_planner', '🗓️ Planner', 'btn-success', 'card-planner'),
+    ('group_bp.list_groups', '👥 Group Study', 'btn-secondary', 'card-group'),
+    ('attendance.mark_attendance', '✅ Mark Attendance', 'btn-success', 'card-attendance'),
+    ('attendance.attendance_summary', '👤 All Student Attendance', 'btn-warning', 'card-attendance'),
+    ('doubt.view_doubts', 'View / Answer Doubts', 'btn-outline-warning', 'card-doubt'),
+    ('complaint.all_complaints', '🧾 All Complaints', 'btn-outline-danger', 'card-complaint'),
+    ('routine.add_routine', '➕ Add Routine', 'btn-outline-success', 'card-routine'),
+    ('routine.view_routine', '📅 View Routine', 'btn-outline-primary', 'card-routine'),
+    ('leave.apply_leave', '📝 Apply Leave', 'btn-outline-success', 'card-leave'),
+    ('leave.view_my_leaves', '📁 My Applications', 'btn-outline-secondary', 'card-applications'),
+    ('portfolio.view_portfolio', '🧾 My Portfolio', 'btn-outline-primary', 'card-portfolio'),
+    ('feedback.view_feedback', '<i class="bi bi-chat-dots me-2"></i> View Feedback', 'btn-outline-primary shadow-sm', 'card-feedback')
+] %}
+
+      <div class="col-md-3 mb-3">
+        <div class="card-wrapper {{ cardcls }}">
+          <a href="{{ url_for(route) }}" class="btn {{ cls }} w-100">{{ label|safe }}</a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+  {% elif role == 'Admin' %}
+  <div class="alert alert-dark">
+    🛠️ Admin Dashboard
+  </div>
+  <div class="row">
+    {% for route, label, cls, cardcls in [
+    ('notes.view_notes', '📘 All Notes', 'btn-primary', 'card-notes'),
+    ('admin.manage_users', '👥 Manage Users', 'btn-danger', 'card-group'),
+    ('planner.view_planner', '🗓️ Planner Overview', 'btn-success', 'card-planner'),
+    ('attendance.mark_attendance', '✅ Mark Attendance', 'btn-success', 'card-attendance'),
+    ('attendance.attendance_summary', '👤 All Student Attendance', 'btn-warning', 'card-attendance'),
+    ('doubt.view_doubts', 'View / Answer Doubts', 'btn-outline-warning', 'card-doubt'),
+    ('complaint.all_complaints', '🧾 Manage Complaints', 'btn-outline-danger', 'card-complaint'),
+    ('portfolio.admin_view', '📁 View Student Portfolios', 'btn-outline-info', 'card-portfolio'),
+    ('leave.view_all_leaves', '📩 All Leave Applications', 'btn-outline-dark', 'card-applications'),
+    ('feedback.view_feedback', '<i class="bi bi-chat-dots me-2"></i> View Feedback', 'btn-outline-primary shadow-sm', 'card-feedback')
+] %}
+
+    <div class="col-md-3 mb-3">
+      <div class="card-wrapper {{ cardcls }}">
+        <a href="{{ url_for(route) }}" class="btn {{ cls }} w-100">{{ label|safe }}</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% else %}
+    <div class="alert alert-danger">
+      ❌ Unknown role. Please contact support.
+    </div>
+  {% endif %}
+  <button id="darkToggle" class=  "btn btn-dark">
+    <i class ="bi bi-moon-stars-fill"></i>
+  </button>
+</div>
+{% endblock %}

@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+
+    <!-- Card for editing task -->
+    <div class="update-card mx-auto" style="max-width: 600px;">
+
+        <h3 class="mb-4 text-center">✏️ Edit Task</h3>
+
+        <form method="POST">
+            {{ form.hidden_tag() }}
+
+            <!-- Task Name -->
+            <div class="mb-3">
+                {{ form.task_name.label(class="form-label fw-bold") }}
+                {{ form.task_name(class="form-control", placeholder="Enter task name") }}
+            </div>
+
+            <!-- Due Date -->
+            <div class="mb-3">
+                {{ form.due_date.label(class="form-label fw-bold") }}
+                {{ form.due_date(class="form-control") }}
+            </div>
+
+            <!-- Completed -->
+            <div class="mb-3 form-check">
+                {{ form.completed(class="form-check-input") }}
+                {{ form.completed.label(class="form-check-label") }}
+            </div>
+
+            <!-- Buttons -->
+            <div class="d-flex justify-content-between">
+                <button type="submit" class="btn btn-custom">💾 Save Changes</button>
+                <a href="{{ url_for('planner.view_planner') }}" class="btn btn-cancel">❌ Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    body {
+        background: linear-gradient(135deg, #d0f0ff 0%, #e6ecf0 100%);
+        min-height: 100vh;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .update-card {
+        background: rgba(255, 255, 255, 0.25);
+        backdrop-filter: blur(14px);
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+        color: #333;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .update-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .form-control {
+        background-color: rgba(255, 255, 255, 0.5);
+        color: #333;
+        border: none;
+        border-radius: 10px;
+        padding: 10px 14px;
+        transition: 0.3s;
+    }
+
+    .form-control:focus {
+        background-color: rgba(255, 255, 255, 0.8);
+        box-shadow: 0 0 0 3px rgba(0, 180, 216, 0.25);
+        outline: none;
+    }
+
+    .form-control::placeholder {
+        color: rgba(0, 0, 0, 0.5);
+    }
+
+    .btn-custom {
+        background: linear-gradient(90deg, #48cae4, #00b4d8);
+        border: none;
+        border-radius: 30px;
+        padding: 10px 20px;
+        color: white;
+        font-weight: bold;
+        transition: 0.3s ease-in-out;
+    }
+
+    .btn-custom:hover {
+        transform: scale(1.05);
+        background: linear-gradient(90deg, #00b4d8, #48cae4);
+        box-shadow: 0 4px 15px rgba(0, 180, 216, 0.3);
+    }
+
+    .btn-cancel {
+        border-radius: 30px;
+        padding: 10px 20px;
+        background-color: #dee2e6;
+        color: black;
+        border: none;
+        transition: 0.3s;
+        text-decoration: none;
+    }
+
+    .btn-cancel:hover {
+        background-color: #ced4da;
+        transform: scale(1.02);
+    }
+</style>
+{% endblock %}

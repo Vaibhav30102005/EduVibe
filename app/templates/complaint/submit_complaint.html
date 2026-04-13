@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+  body {
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0e7ff 100%);
+    font-family: 'Segoe UI', Arial, sans-serif;
+  }
+
+  .container {
+    max-width: 650px;
+    margin-top: 50px;
+  }
+
+  .card {
+    border-radius: 18px;
+    background: #ffffff;
+    box-shadow: 0 10px 30px rgba(60, 72, 88, 0.1);
+    padding: 2rem;
+    transition: box-shadow 0.3s ease;
+  }
+
+  .card:hover {
+    box-shadow: 0 16px 40px rgba(60, 72, 88, 0.15);
+  }
+
+  .card-title {
+    font-weight: 700;
+    font-size: 1.6rem;
+    color: #3b82f6;
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.5px;
+  }
+
+  .form-label {
+    font-weight: 600;
+    color: #4f46e5;
+    margin-bottom: 0.4rem;
+  }
+
+  .form-control, .form-select {
+    border-radius: 10px;
+    border: 1px solid #c7d2fe;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .form-control:focus, .form-select:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+  }
+
+  .btn-success {
+    width: 100%;
+    background: linear-gradient(90deg, #34d399 0%, #3b82f6 100%);
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    padding: 0.75rem;
+    font-size: 1.1rem;
+    color: white;
+    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.15);
+    transition: background 0.3s, transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .btn-success:hover {
+    background: linear-gradient(90deg, #3b82f6 0%, #34d399 100%);
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 10px 20px rgba(52, 211, 153, 0.2);
+  }
+
+  .bi-send-fill {
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+</style>
+
+<div class="container">
+  <div class="card shadow-sm border-0">
+    <div class="card-body">
+      <h4 class="card-title">Submit a Complaint</h4>
+
+      <form method="post">
+        <div class="mb-3">
+          <label for="title" class="form-label">Title</label>
+          <input type="text" name="title" id="title" class="form-control" placeholder="Enter a brief title" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="description" class="form-label">Description</label>
+          <textarea name="description" id="description" class="form-control" rows="5" placeholder="Describe your issue..." required></textarea>
+        </div>
+
+        <!-- ✅ New Visibility Dropdown -->
+        <div class="mb-3">
+          <label for="visibility" class="form-label">Who should see this complaint?</label>
+          <select name="visibility" id="visibility" class="form-select" required>
+            <option value="cr_admin" selected>Class Representative & Admin</option>
+            <option value="admin_only">Admin Only</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn btn-success">
+          <i class="bi bi-send-fill"></i> Submit
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

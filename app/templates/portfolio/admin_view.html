@@ -1,0 +1,533 @@
+{% extends 'base.html' %}
+
+{% block title %}Student/CR Portfolios{% endblock %}
+
+{% block content %}
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+    body {
+        background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
+        background-size: 400% 400%;
+        animation: bgGradient 20s ease infinite;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #333;
+    }
+
+    @keyframes bgGradient {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 5rem auto;
+        padding: 2.5rem;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        backdrop-filter: blur(10px);
+    }
+
+    h2 {
+        font-weight: bold;
+        margin-bottom: 1.5rem;
+        color: #222;
+    }
+
+    .form-label {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+    .form-select {
+        border-radius: 10px;
+        border: 1px solid #ced4da;
+        padding: 0.5rem;
+        transition: border-color 0.3s ease;
+    }
+    .form-select:focus {
+        border-color: #80bdff;
+        box-shadow: 0 0 0 0.2rem rgba(128, 189, 255, 0.25);
+    }
+    .card {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        margin-bottom: 1.5rem;
+    }
+    .card-body {
+        padding: 1.5rem;
+    }
+    .card img {
+        border-radius: 50%;
+        border: 2px solid #e0e0e0;
+    }
+    .card h5 {
+        font-weight: 600;
+        color: #333;
+    }
+    .card p {
+        margin: 0.5rem 0;
+        color: #555;
+    }
+    .card a {
+        color: #007bff;
+        text-decoration: none;
+    }
+    .card a:hover {
+        text-decoration: underline;
+    }
+    .btn-primary {
+        background: linear-gradient(90deg, #1e88e5, #1565c0);
+        border: none;
+        border-radius: 12px;
+        padding: 0.75rem 1.5rem;
+        font-weight: bold;
+        color: white;
+        transition: background 0.3s ease, transform 0.2s ease;
+    }
+    .btn-primary:hover {
+        background: linear-gradient(90deg, #1565c0, #0d47a1);
+        transform: scale(1.03);
+    }
+    .btn-primary:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+    }
+    .alert {
+        padding: 1rem;
+        border-radius: 10px;
+        background-color: #fff3cd;
+        color: #856404;
+        border: 1px solid #ffeeba;
+        margin-bottom: 1.5rem;
+    }
+    .alert-warning {
+        background-color: #fff3cd;
+        color: #856404;
+        border-color: #ffeeba;
+    }
+    .alert-danger {
+        background-color: #f8d7da;
+        color: #721c24;
+        border-color: #f5c6cb;
+    }
+    .alert-success {
+        background-color: #d4edda;
+        color: #155724;
+        border-color: #c3e6cb;
+    }
+    .fade-in {
+        animation: fadeIn 0.5s ease-in-out;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    .text-center a {
+        color: #1e88e5;
+        font-weight: 500;
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+    .text-center a:hover {
+        color: #0d47a1;
+        text-decoration: underline;
+    }
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    .form-control,
+    .form-select {
+        width: 100%;
+        padding: 0.6rem 0.8rem;
+        border-radius: 10px;
+        border: 1px solid #ced4da;
+        background-color: #f5faff;
+        transition: all 0.3s ease;
+    }
+    .form-control:focus,
+    .form-select:focus {
+        border-color: #1e88e5;
+        box-shadow: 0 0 0 0.15rem rgba(30, 136, 229, 0.3);
+        outline: none;
+    }
+    .form-control:disabled,
+    .form-select:disabled {
+        background-color: #e9ecef;
+        opacity: 1;
+    }
+    .form-control::placeholder,
+    .form-select::placeholder {
+        color: #6c757d;
+        opacity: 1; /* Override default opacity */
+    }
+    .form-control:focus::placeholder,
+    .form-select:focus::placeholder {
+        color: #6c757d;
+        opacity: 0.8; /* Slightly less opaque on focus */
+    }
+    .form-group-colored {
+        background: #e3f2fd;
+        border-radius: 12px;
+        padding: 1rem 1.2rem;
+        margin-bottom: 1.2rem;
+        box-shadow: inset 0 0 0.5rem rgba(0, 0, 0, 0.03);
+        border: 1px solid #bbdefb;
+    }
+    .form-label {
+        font-weight: 600;
+        color: #303f9f;
+        margin-bottom: 0.5rem;
+        padding: 0% 0.2rem;
+    }
+    .text-danger {
+        color: #d32f2f;
+        font-size: 0.875rem;
+        margin-top: 0.5rem;
+    }
+    .text-center {
+        text-align: center;
+        margin-top: 1.5rem;
+    }
+    .text-center a {
+        color: #1e88e5;
+        font-weight: 500;
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+    .text-center a:hover {
+        color: #0d47a1;
+        text-decoration: underline;
+    }
+    .text-center a:focus {
+        outline: none;
+        color: #0d47a1;
+    }
+    .fade-in {
+        animation: fadeInUp 0.6s ease-out;
+    }
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    .card {
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.95);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+        margin-bottom: 1.5rem;
+    }
+    .card-body {
+        padding: 2rem;
+    }
+    .card-body h5 {
+        font-weight: 600;
+        color: #1a237e;
+        margin-bottom: 0.5rem;
+    }
+    .card-body p {
+        margin: 0.5rem 0;
+        color: #555;
+    }
+    .card-body a {
+        color: #1e88e5;
+        text-decoration: none;
+    }
+    .card-body a:hover {
+        text-decoration: underline;
+    }
+    .card-body img {
+        border-radius: 50%;
+        border: 2px solid #e0e0e0;
+        margin-right: 1rem;
+    }
+    .card-body .d-flex {
+        align-items: center;
+    }
+    .card-body .me-3 {
+        margin-right: 1rem;
+    }
+    .card-body .mb-0 {
+        margin-bottom: 0;
+    }
+    .card-body small {
+        color: #6c757d;
+    }
+    .card-body hr {
+        border: 0;
+        border-top: 1px solid #e0e0e0;
+        margin: 1rem 0;
+    }
+    .card-body p strong {
+        color: #1a237e;
+    }
+    .card-body p a {
+        color: #1e88e5;
+        text-decoration: none;
+    }
+    .card-body p a:hover {
+        text-decoration: underline;
+    }
+    .card-body p a:focus {
+        outline: none;
+        color: #0d47a1;
+    }
+    .card-body p a:visited {
+        color: #1e88e5;
+    }
+    .card-body p a:visited:hover {
+        color: #0d47a1;
+    }
+    .card-body p a:focus {
+        outline: none;
+        color: #0d47a1;
+    }
+    .card-body p a:focus:hover {
+        color: #0d47a1;
+    }
+    .card-body p a:focus:visited {
+        color: #1e88e5;
+    }
+    .card-body p a:focus:visited:hover {
+        color: #0d47a1;
+    }
+    .card-body p a:focus:active {
+        color: #0d47a1;
+    }
+    .card-body p a:focus:active:hover {
+        color: #0d47a1;
+    }
+    .card-body p a:focus:active:visited {
+        color: #1e88e5;
+    }
+    .card-body p a:focus:active:visited:hover {
+        color: #0d47a1;
+    }
+    .card-body p a:focus:active:focus {
+        color: #0d47a1;
+    }
+    .card-body p a:focus:active:focus:hover {
+        color: #0d47a1;
+    }
+    .card-body p a:focus:active:focus:visited {
+        color: #1e88e5;
+    }
+    .card-body p a:focus:active:focus:visited:hover {
+        color: #0d47a1;
+    }
+    .card-body p a:focus:active:focus:active {
+        color: #0d47a1;
+    }
+    .card-body p a:focus:active:focus:active:hover {
+        color: #0d47a1;
+    }
+    .card-body p a:focus:active:focus:active:visited {
+        color: #1e88e5;
+    }
+    .card-body p a:focus:active:focus:active:visited:hover {
+        color: #0d47a1;
+    }
+    .card-body p a:focus:active:focus:active:focus {
+        color: #0d47a1;
+    }
+    .card-body p a:focus:active:focus:active:focus:hover {
+        color: #0d47a1;
+    }
+    .card-body p a:focus:active:focus:active:focus:visited {
+        color: #1e88e5;
+    }
+    .card-body p a:focus:active:focus:active:focus:visited:hover {
+        color: #0d47a1;
+    }
+    .card-body p a:focus:active:focus:active:focus:active {
+        color: #0d47a1;
+    }
+    .card-body p a:focus:active:focus:active:active:hover {
+        color: #0d47a1;
+    }
+    .card-body p a:focus:active:focus:active:active:visited {
+        color: #1e88e5;
+    }
+    .card-body p a:focus:active:focus:active:active:hover {
+        color: #0d47a1;
+    }
+    .card-body p a:focus:active:focus:active:active:visited {
+        color: #1e88e5;
+    }
+    .card-body p a:focus:active:focus:active:active:hover {
+        color: #0d47a1;
+    }
+    .card-body p a:focus:active:focus:active:active {
+        color: #0d47a1;
+    }
+    .card-body p a:focus:active:focus:active:hover {
+        color: #0d47a1;
+    }
+    .card-body p a:focus:active:focus {
+        color: #0d47a1;
+    }
+    .card-body p a:focus:hover {
+        color: #0d47a1;
+    }
+    .card-body p a:visited {
+        color: #1e88e5;
+    }
+    .card-body p a:visited:hover {
+        color: #0d47a1;
+    }
+    .card-body p a:visited:focus {
+        color: #0d47a1;
+    }
+    .card-body p a:visited:focus:hover {
+        color: #0d47a1;
+    }
+    .card-body p a:visited:active {
+        color: #0d47a1;
+    }
+    .card-body p a:visited:active:hover {
+        color: #0d47a1;
+    }
+    .card-body p a:visited:active:focus {
+        color: #0d47a1;
+    }
+    .card-body p a:visited:active:focus:hover {
+        color: #0d47a1;
+    }
+    .card-body p a:visited:active:focus:visited {
+        color: #1e88e5;
+    }
+    .card-body p a:visited:active:focus:visited:hover {
+        color: #0d47a1;
+    }
+    .card-body p a:visited:active:focus:active {
+        color: #0d47a1;
+    }
+    .card-body p a:visited:active:focus:active:hover {
+        color: #0d47a1;
+    }
+    .card-body p a:visited:active:focus:active:visited {
+        color: #1e88e5;
+    }
+    .card-body p a:visited:active:focus:active:visited:hover {
+        color: #0d47a1;
+    }
+    .card-body p a:visited:active:focus:active:focus {
+        color: #0d47a1;
+    }
+    .card-body p a:visited:active:focus:active:focus:hover {
+        color: #0d47a1;
+    }
+    .card-body p a:visited:active:focus:active:focus:visited {
+        color: #1e88e5;
+    }
+    .card-body p a:visited:active:focus:active:focus:hover {
+        color: #0d47a1;
+    }
+    .card-body p a:visited:active:focus:active:focus:visited {
+        color: #1e88e5;
+    }
+    .card-body p a:visited:active:focus:active:focus:hover {
+        color: #0d47a1;
+    }
+
+</style>
+<div class="container mt-4">
+  <h2 class="mb-3">📁 Student/CR Portfolios</h2>
+
+  <!-- Filter Form -->
+  <form method="get" class="row g-2 mb-4">
+    <div class="col-md-4">
+      <select name="branch" class="form-select">
+        <option value="">All Branches</option>
+        {% for b in all_branches %}
+          <option value="{{ b }}" {% if b == selected_branch %}selected{% endif %}>{{ b }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-4">
+      <select name="semester" class="form-select">
+        <option value="">All Semesters</option>
+        {% for s in all_semesters %}
+          <option value="{{ s }}" {% if s == selected_semester %}selected{% endif %}>{{ s }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-4">
+      <button type="submit" class="btn btn-primary w-100">🔍 Filter</button>
+    </div>
+  </form>
+
+  <!-- Portfolio Cards -->
+  {% if portfolios %}
+    <div class="row">
+      {% for portfolio in portfolios %}
+        <div class="col-md-6">
+          <div class="card shadow-sm mb-4">
+            <div class="card-body">
+              <div class="d-flex align-items-center">
+                <div class="me-3">
+                  {% if portfolio.profile_pic %}
+                    <img src="{{ url_for('static', filename=portfolio.profile_pic.replace('static/', '')) }}"
+                         class="rounded-circle border" width="150" height="150" alt="Profile Picture">
+                  {% else %}
+                    <img src="{{ url_for('static', filename='images/default_profile.png') }}"
+                         class="rounded-circle border" width="60" height="60" alt="Default Picture">
+                  {% endif %}
+                </div>
+                <div>
+                  <h5 class="mb-0">{{ portfolio.student.name }}</h5>
+                  <small>{{ portfolio.student.branch }} | Sem {{ portfolio.student.semester }} </small>
+                </div>
+              </div>
+              <hr>
+              <p><strong>🏆 Achievements:</strong> {{ portfolio.achievements or 'N/A' }}</p>
+              <p><strong>🛠️ Skills:</strong> {{ portfolio.skills or 'N/A' }}</p>
+              <p><strong>🎯 Interests:</strong> {{ portfolio.interests or 'N/A' }}</p>
+              <p><strong>🐙 GitHub:</strong> 
+                {% if portfolio.github_link %}
+                  <a href="{{ portfolio.github_link }}" target="_blank">{{ portfolio.github_link }}</a>
+                {% else %}
+                  N/A
+                {% endif %}
+              </p>
+              <p><strong>🔗 LinkedIn:</strong> 
+                {% if portfolio.linkedin_link %}
+                  <a href="{{ portfolio.linkedin_link }}" target="_blank">{{ portfolio.linkedin_link }}</a>
+                {% else %}
+                  N/A
+                {% endif %}
+              </p>
+              <p><strong>📄 Resume:</strong>
+                {% if portfolio.resume %}
+                  <a href="{{ url_for('static', filename=portfolio.resume.replace('static/', '')) }}" target="_blank">View</a>
+                {% else %}
+                  Not uploaded
+                {% endif %}
+              </p>
+              <p><strong>📁 Certificates:</strong>
+                {% if portfolio.certificates %}
+                  <a href="{{ url_for('static', filename=portfolio.certificates.replace('static/', '')) }}" target="_blank">View</a>
+                {% else %}
+                  Not uploaded
+                {% endif %}
+              </p>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-warning">No portfolios found for the selected filters.</div>
+  {% endif %}
+</div>
+{% endblock %}

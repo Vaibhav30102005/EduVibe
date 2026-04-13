@@ -1,0 +1,211 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+  body {
+    background: linear-gradient(135deg, #f8ffae 0%, #43c6ac 100%);
+    font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+  }
+
+  .container {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    box-shadow: 0 12px 32px rgba(67, 198, 172, 0.15);
+    padding: 36px 30px;
+    margin-top: 40px;
+    backdrop-filter: blur(6px);
+  }
+
+  h2 {
+    font-weight: 700;
+    color: #2b6e66;
+    letter-spacing: 1px;
+    margin-bottom: 28px;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    font-size: 1.8rem;
+  }
+
+  .form-label {
+    font-weight: 600;
+    color: #2b6e66;
+    margin-bottom: 6px;
+  }
+
+  .form-control,
+  .form-select {
+    border-radius: 10px;
+    border: 1px solid #43c6ac;
+    box-shadow: 0 2px 6px rgba(67, 198, 172, 0.05);
+    padding: 10px;
+    font-size: 1rem;
+    transition: all 0.2s ease-in-out;
+  }
+
+  .form-control:focus,
+  .form-select:focus {
+    border-color: #2b6e66;
+    box-shadow: 0 0 0 2px rgba(67, 198, 172, 0.2);
+    outline: none;
+  }
+
+  .btn-primary {
+    background: linear-gradient(to right, #43c6ac, #191654);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .btn-primary:hover {
+    background: linear-gradient(to right, #191654, #43c6ac);
+  }
+
+  .btn-success {
+    background: linear-gradient(90deg, #43c6ac 0%, #f8ffae 100%);
+    color: #191654;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    padding: 10px 18px;
+    margin-top: 20px;
+    transition: background 0.3s ease;
+  }
+
+  .btn-success:hover {
+    background: linear-gradient(90deg, #f8ffae 0%, #43c6ac 100%);
+    color: #191654;
+  }
+
+  .table {
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(67, 198, 172, 0.08);
+    margin-top: 20px;
+  }
+
+  .table thead {
+    background: #43c6ac;
+    color: #fff;
+    font-weight: 600;
+    font-size: 1rem;
+  }
+
+  .table-bordered th,
+  .table-bordered td {
+    border: 1px solid #43c6ac;
+    vertical-align: middle;
+  }
+
+  .table tbody tr:hover {
+    background-color: #f8ffae;
+    transition: background-color 0.2s ease;
+  }
+
+  .text-muted {
+    color: #6c757d !important;
+  }
+
+  @media (max-width: 576px) {
+    .container {
+      padding: 20px 16px;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      text-align: center;
+    }
+
+    .form-group,
+    .form-control,
+    .form-select {
+      font-size: 0.95rem;
+    }
+
+    .btn-success,
+    .btn-primary {
+      font-size: 0.95rem;
+      padding: 8px 16px;
+    }
+
+    table th, table td {
+      font-size: 0.95rem;
+    }
+  }
+</style>
+
+<div class="container mt-4">
+  <h2>✅ Mark Attendance</h2>
+
+  {% if is_admin %}
+    <!-- Admin View: Full Attendance Form -->
+    <form method="get" class="row g-3 mb-4">
+      <div class="col-md-4">
+        <label for="branch" class="form-label">Branch</label>
+        <select name="branch" id="branch" class="form-select">
+          <option value="">-- All Branches --</option>
+          {% for branch in branches %}
+          <option value="{{ branch }}" {% if branch == selected_branch %}selected{% endif %}>{{ branch }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label for="semester" class="form-label">Semester</label>
+        <select name="semester" id="semester" class="form-select">
+          <option value="">-- All Semesters --</option>
+          {% for sem in semesters %}
+          <option value="{{ sem }}" {% if sem == selected_semester %}selected{% endif %}>{{ sem }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-4 d-flex align-items-end">
+        <button type="submit" class="btn btn-primary w-100">Filter Students</button>
+      </div>
+    </form>
+
+    <form method="POST">
+      <div class="form-group mb-3">
+        <label for="date">Select Date:</label>
+        <input type="date" name="date" class="form-control" value="{{ today }}">
+      </div>
+
+      <table class="table table-bordered">
+        <thead class="table-light">
+          <tr>
+            <th>Student</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for student in students %}
+          <tr>
+            <td>{{ student.name }}</td>
+            <td>
+              <select class="form-select" name="status_{{ student.id }}">
+                <option value="Present">Present</option>
+                <option value="Absent">Absent</option>
+              </select>
+            </td>
+          </tr>
+          {% endfor %}
+          {% if students|length == 0 %}
+          <tr>
+            <td colspan="2" class="text-center text-muted">No students found for the selected filter.</td>
+          </tr>
+          {% endif %}
+        </tbody>
+      </table>
+
+      <button type="submit" class="btn btn-success">Submit Attendance</button>
+    </form>
+
+  {% else %}
+    <!-- CR / Student View: Restriction Message -->
+    <div class="alert alert-warning text-center mt-4">
+      🚫 You are not allowed to mark attendance. Only Admin has this access.
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

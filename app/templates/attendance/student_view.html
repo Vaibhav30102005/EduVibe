@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+body {
+  background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%);
+  font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 10px 32px rgba(60, 72, 88, 0.12);
+  padding: 36px 28px;
+  margin-top: 40px;
+}
+
+h3 {
+  font-weight: 700;
+  color: #3b3b5b;
+  letter-spacing: 1px;
+  text-shadow: 0 2px 8px rgba(60,72,88,0.08);
+  margin-bottom: 20px;
+}
+
+.alert-warning {
+  background: linear-gradient(90deg, #fffbe6 60%, #ffe4b3 100%);
+  border: none;
+  color: #7c4d00;
+  font-size: 1.1rem;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(255, 193, 7, 0.08);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.table-responsive {
+  margin-top: 24px;
+}
+
+.table {
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(60,72,88,0.06);
+}
+
+.table-dark th {
+  background: linear-gradient(90deg, #6366f1 60%, #818cf8 100%);
+  color: #fff;
+  font-size: 1.05rem;
+  letter-spacing: 0.5px;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) {
+  background-color: #f3f4f6;
+}
+
+.badge.bg-success {
+  background: linear-gradient(90deg, #34d399 60%, #10b981 100%);
+  color: #fff;
+  font-size: 1rem;
+  padding: 0.45em 1em;
+  border-radius: 14px;
+  box-shadow: 0 1px 5px rgba(52,211,153,0.12);
+}
+
+.badge.bg-danger {
+  background: linear-gradient(90deg, #f87171 60%, #ef4444 100%);
+  color: #fff;
+  font-size: 1rem;
+  padding: 0.45em 1em;
+  border-radius: 14px;
+  box-shadow: 0 1px 5px rgba(239,68,68,0.12);
+}
+
+.text-muted {
+  font-size: 1.05rem;
+  color: #6b7280 !important;
+}
+
+@media (max-width: 600px) {
+  .container {
+    padding: 20px 10px;
+  }
+  h3 {
+    font-size: 1.3rem;
+  }
+  .table th, .table td {
+    font-size: 0.95rem;
+    padding: 0.5em;
+  }
+  .badge {
+    font-size: 0.9rem;
+    padding: 0.4em 0.9em;
+  }
+}
+</style>
+
+<div class="container mt-4">
+  <!-- ✅ Title dynamically changes based on role -->
+  {% if current_user.role == 'student' %}
+    <h3>📊 My Attendance Record</h3>
+  {% elif current_user.role == 'cr' %}
+    <h3>📊 Student Attendance ({{ current_user.branch }} - Semester {{ current_user.semester }})</h3>
+  {% elif current_user.role == 'admin' %}
+    <h3>📊 Student Attendance (Branch: {{ current_user.branch }})</h3>
+  {% endif %}
+
+  <!-- ✅ Warning only for student self -->
+  {% if show_popup and current_user.role == 'student' %}
+  <div class="alert alert-warning alert-dismissible fade show" role="alert">
+    ⚠️ <strong>Warning:</strong> Your attendance is below 75%!
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  {% endif %}
+
+  <p><strong>Total Attendance:</strong> {{ percentage|round(2) }}%</p>
+
+  <div class="table-responsive">
+    <table class="table table-striped table-bordered">
+      <thead class="table-dark">
+        <tr>
+          <th>Date</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for record in records %}
+        <tr>
+          <td>{{ record.date.strftime('%d %b %Y') }}</td>
+          <td>
+            <span class="badge {% if record.status == 'Present' %}bg-success{% else %}bg-danger{% endif %}">
+              {{ record.status }}
+            </span>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="2" class="text-center text-muted">No attendance records found.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

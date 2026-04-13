@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    html, body {
+        height: 100%;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #333;
+        line-height: 1.6;
+        background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
+        background-size: 400% 400%;
+        animation: bgGradient 20s ease infinite;
+    }
+
+    @keyframes bgGradient {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+    }
+
+    .container {
+        max-width: 700px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 16px;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    h2, h4 {
+        font-weight: bold;
+        color: #1a237e;
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .btn {
+        border-radius: 12px;
+        font-weight: 600;
+        padding: 0.6rem 1.2rem;
+        transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    .btn-primary {
+        background: linear-gradient(90deg, #3f51b5, #1a237e);
+        border: none;
+        color: #fff;
+    }
+
+    .btn-primary:hover {
+        background: linear-gradient(90deg, #303f9f, #0d47a1);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-success {
+        background: linear-gradient(90deg, #4caf50, #2e7d32);
+        border: none;
+        color: #fff;
+    }
+
+    .btn-success:hover {
+        background: linear-gradient(90deg, #43a047, #1b5e20);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+    }
+
+    .list-group {
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .list-group-item {
+        background-color: #f9f9f9;
+        border: none;
+        border-bottom: 1px solid #e0e0e0;
+        padding: 1rem 1.25rem;
+        transition: background-color 0.2s ease;
+    }
+
+    .list-group-item:hover {
+        background-color: #eef3fb;
+    }
+
+    .btn-outline-primary {
+        border-color: #1a237e;
+        color: #1a237e;
+    }
+
+    .btn-outline-primary:hover {
+        background-color: #1a237e;
+        color: #fff;
+    }
+
+    .alert-info {
+        border-radius: 12px;
+        background-color: #e3f2fd;
+        color: #0d47a1;
+        padding: 1rem;
+        text-align: center;
+    }
+
+    .row > .col-md-6 {
+        padding: 0.5rem;
+    }
+
+</style>
+
+<div class="container mt-4">
+  <h2 class="mb-4">🧑‍🤝‍🧑 Group Study</h2>
+
+  <div class="row mb-4">
+    <div class="col-md-6 mb-2">
+      <a href="{{ url_for('group_bp.create_group') }}" class="btn btn-primary w-100">
+        ➕ Create New Group
+      </a>
+    </div>
+    <div class="col-md-6 mb-2">
+      <a href="{{ url_for('group_bp.join_group') }}" class="btn btn-success w-100">
+        🔑 Join Existing Group
+      </a>
+    </div>
+  </div>
+
+  <h4 class="mb-3">📋 My Groups</h4>
+
+  {% if groups %}
+    <ul class="list-group">
+      {% for group in groups %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <div>
+            <strong>{{ group.name }}</strong><br>
+            <small class="text-muted">Code: {{ group.group_code }}</small>
+          </div>
+          <div class="btn-group">
+            <a href="{{ url_for('group_bp.view_group', group_id=group.id) }}" class="btn btn-outline-primary btn-sm">
+              View
+            </a>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <div class="alert alert-info mt-3">
+      You are not part of any group yet.
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

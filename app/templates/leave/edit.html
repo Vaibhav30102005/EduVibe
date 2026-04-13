@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    body {
+        background: linear-gradient(135deg, rgba(135,206,250,0.85) 0%, rgba(224,247,250,0.95) 100%);
+        min-height: 100vh;
+        font-family: 'Segoe UI', Arial, sans-serif;
+    }
+    .card-glossy {
+        background: rgba(255,255,255,0.85);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+        border-radius: 20px;
+        backdrop-filter: blur(6px);
+        border: 1px solid rgba(255,255,255,0.18);
+        padding: 2rem 2.5rem;
+        margin-top: 40px;
+        transition: box-shadow 0.3s;
+        max-width: 500px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .card-glossy:hover {
+        box-shadow: 0 16px 40px 0 rgba(31, 38, 135, 0.25);
+        transform: translateY(-4px) scale(1.02);
+    }
+    .form-label {
+        font-weight: 500;
+        color: #1976d2;
+    }
+    .form-control {
+        border-radius: 10px;
+        border: 1px solid #b3e5fc;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .form-control:focus {
+        border-color: #1976d2;
+        box-shadow: 0 0 0 2px #b3e5fc;
+    }
+    .btn-primary {
+        background: linear-gradient(90deg, #1976d2 60%, #64b5f6 100%);
+        border: none;
+        border-radius: 10px;
+        font-weight: 500;
+        box-shadow: 0 2px 8px rgba(25, 118, 210, 0.15);
+        transition: background 0.3s, transform 0.2s;
+    }
+    .btn-primary:hover {
+        background: linear-gradient(90deg, #1565c0 60%, #29b6f6 100%);
+        transform: scale(1.05);
+    }
+    .btn-secondary {
+        border-radius: 10px;
+        font-weight: 500;
+        margin-left: 10px;
+        background: #e3f2fd;
+        color: #1976d2;
+        border: 1px solid #90caf9;
+        transition: background 0.3s, color 0.3s;
+    }
+    .btn-secondary:hover {
+        background: #bbdefb;
+        color: #0d47a1;
+    }
+    h3 {
+        color: #1565c0;
+        font-weight: 700;
+        text-shadow: 0 2px 8px #b3e5fc;
+        margin-bottom: 1.5rem;
+        text-align: center;
+    }
+</style>
+<div class="container">
+    <div class="card-glossy">
+        <h3>Edit Leave Application</h3>
+        <form method="POST" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            
+            <!-- Reason -->
+            <div class="mb-3">
+                {{ form.reason.label(class="form-label") }}
+                {{ form.reason(class="form-control") }}
+            </div>
+
+            <!-- From Date -->
+            <div class="mb-3">
+                <label class="form-label">From Date</label>
+                <input type="date" id="from_date" name="from_date" class="form-control"
+                       value="{{ leave.from_date.strftime('%Y-%m-%d') if leave.from_date else '' }}" required>
+            </div>
+
+            <!-- To Date -->
+            <div class="mb-3">
+                <label class="form-label">To Date</label>
+                <input type="date" id="to_date" name="to_date" class="form-control"
+                       value="{{ leave.to_date.strftime('%Y-%m-%d') if leave.to_date else '' }}" required>
+            </div>
+
+            <!-- Supporting Document -->
+            <div class="mb-3">
+                {{ form.document.label(class="form-label") }}
+                {{ form.document(class="form-control") }}
+            </div>
+
+            <button type="submit" class="btn btn-primary">Update</button>
+            <a href="{{ url_for('leave.view_my_leaves') }}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+
+<!-- ✅ JavaScript to block past dates -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+      let today = new Date().toISOString().split("T")[0];
+      document.getElementById("from_date").setAttribute("min", today);
+      document.getElementById("to_date").setAttribute("min", today);
+  });
+</script>
+{% endblock %}

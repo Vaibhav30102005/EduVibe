@@ -1,0 +1,198 @@
+{% extends 'base.html' %}
+{% block title %}All Leave Applications{% endblock %}
+
+{% block content %}
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    html, body {
+        height: 100%;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #333;
+        line-height: 1.6;
+    }
+
+    body {
+        background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
+        background-size: 400% 400%;
+        animation: bgGradient 20s ease infinite;
+    }
+
+    @keyframes bgGradient {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: auto;
+        padding: 2rem;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 16px;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    h3 {
+        font-weight: bold;
+        color: #1a237e;
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .table {
+        width: 100%;
+        margin-top: 1rem;
+        border-collapse: collapse;
+    }
+    .table th, .table td {
+        padding: 0.75rem;
+        text-align: left;
+        border-bottom: 1px solid #dee2e6;
+    }
+    .table th {
+        background-color: #363738ff;
+        font-weight: bold;
+        color: #fff;
+    }
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: #f2f2f2;
+    }
+    .table-striped tbody tr:nth-of-type(even) {
+        background-color: #ffffff;
+    }
+    .table-bordered {
+        border: 1px solid #dee2e6;
+    }
+    .table-bordered th, .table-bordered td {
+        border: 1px solid #dee2e6;
+    }
+
+    .badge {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.875rem;
+        border-radius: 0.375rem;
+    }
+    .badge.bg-success {
+        background-color: #28a745;
+        color: #fff;
+    }
+    .badge.bg-danger {
+        background-color: #dc3545;
+        color: #fff;
+    }
+    .badge.bg-warning {
+        background-color: #ffc107;
+        color: #212529;
+    }
+
+    .btn {
+        padding: 0.4rem 0.9rem;
+        font-size: 0.85rem;
+        border-radius: 8px;
+        transition: all 0.2s ease;
+    }
+    .btn-outline-primary {
+        background-color: transparent;
+        border: 1px solid #007bff;
+        color: #007bff;
+    }
+    .btn-outline-primary:hover {
+        background-color: #007bff;
+        color: #fff;
+        transform: translateY(-2px);
+    }
+    .btn-outline-dark {
+        background-color: transparent;
+        border: 1px solid #333;
+        color: #333;
+    }
+    .btn-outline-dark:hover {
+        background-color: #333;
+        color: #fff;
+        transform: translateY(-2px);
+    }
+
+    .alert {
+        padding: 1rem;
+        border-radius: 8px;
+        margin-top: 1rem;
+    }
+    .alert-info {
+        background-color: #d1ecf1;
+        color: #0c5460;
+    }
+</style>
+
+<div class="container mt-4 fade-in">
+  <h3 class="mb-4">📩 All Leave Applications (Students + CR)</h3>
+
+  {% if leaves %}
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+          <tr>
+            <th>S.No.</th>
+            <th>Name</th>
+            <th>Role</th>   <!-- ✅ NEW COLUMN -->
+            <th>Reason</th>
+            <th>Document</th>
+            <th>From Date</th>
+            <th>To Date</th>
+            <th>Status</th>
+            <th>Submitted On</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for leave in leaves %}
+          <tr>
+            <td>{{ loop.index }}</td>
+            <td>
+              {{ leave.user.name }}<br>
+              <small>{{ leave.user.roll_no }}</small>
+            </td>
+            <td>
+              <span class="badge bg-info text-dark">{{ leave.user.role }}</span> <!-- ✅ Role Show -->
+            </td>
+            <td>{{ leave.reason }}</td>
+            <td>
+              {% if leave.file_path %}
+                <a href="{{ url_for('leave.view_file', filename=leave.file_path) }}"
+                   class="btn btn-sm btn-outline-primary"
+                   target="_blank">View</a>
+              {% else %}
+                <span class="text-muted">N/A</span>
+              {% endif %}
+            </td>
+            <td>{{ leave.from_date.strftime('%d %b %Y') if leave.from_date else '-' }}</td>
+            <td>{{ leave.to_date.strftime('%d %b %Y') if leave.to_date else '-' }}</td>
+            <td>
+              {% if leave.status == 'Approved' %}
+                <span class="badge bg-success">{{ leave.status }}</span>
+              {% elif leave.status == 'Rejected' %}
+                <span class="badge bg-danger">{{ leave.status }}</span>
+              {% else %}
+                <span class="badge bg-warning text-dark">{{ leave.status }}</span>
+              {% endif %}
+            </td>
+            <td>{{ leave.created_at.strftime('%d %b %Y') }}</td>
+            <td>
+              <a href="{{ url_for('leave.approve_leave', leave_id=leave.id) }}"
+                 class="btn btn-sm btn-outline-dark">Review</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="alert alert-info">No leave applications found.</div>
+  {% endif %}
+</div>
+{% endblock %}

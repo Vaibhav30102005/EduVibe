@@ -1,0 +1,310 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Portfolio{% endblock %}
+
+{% block content %}
+<style>
+
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+    html, body {
+        height: 100%;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #333;
+        line-height: 1.6;
+    }
+
+    body {
+        background: linear-gradient(135deg, #73bec8, #e1f5fe, #3c7ba8a2);
+        background-size: 400% 400%;
+        animation: bgGradient 15s ease infinite;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #333;
+        line-height: 1.6;
+    }
+
+    @keyframes bgGradient {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    .container {
+        max-width: 800px;
+        margin: auto;
+        padding: 2rem;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 16px;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    h2 {
+        font-weight: bold;
+        color: #1a237e;
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        font-weight: bold;
+        color: #303f9f;
+    }
+    .form-control {
+        border-radius: 8px;
+        border: 1px solid #ced4da;
+        padding: 0.5rem 1rem;
+        margin-bottom: 1rem;
+        width: 100%;
+    }
+    .form-control:focus {
+        border-color: #1a237e;
+        box-shadow: 0 0 5px rgba(26, 35, 126, 0.2);
+    }
+    .btn {
+        background: linear-gradient(90deg, #1e88e5, #1565c0);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 0.75rem 1.5rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.3s ease, transform 0.2s ease;
+    }
+    .btn:hover {
+        background: linear-gradient(90deg, #1565c0, #0d47a1);
+        transform: translateY(-2px);
+    }
+    .btn-secondary {
+        background: #6c757d;
+        color: white;
+        border-radius: 8px;
+        padding: 0.75rem 1.5rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.3s ease, transform 0.2s ease;
+    }
+    .btn-secondary:hover {
+        background: #5a6268;
+        transform: translateY(-2px);
+    }
+    .alert {
+        margin-top: 1rem;
+        padding: 1rem;
+        border-radius: 8px;
+    }
+    .alert-success {
+        background-color: #d4edda;
+        color: #155724;
+    }
+    .alert-danger {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+    .text-muted {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+    .text-center a {
+        color: #1e88e5;
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.2s ease;
+    }
+    .text-center a:hover {
+        color: #0d47a1;
+    }
+    .mb-3 {
+        margin-bottom: 1.5rem;
+    }
+    .mt-4 {
+        margin-top: 2rem;
+    }
+    .fade-in {
+        animation: fadeIn 0.5s ease-in-out;
+    }
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    .btn-close {
+        color: #000;
+        opacity: 0.5;
+    }
+    .btn-close:hover {
+        opacity: 1;
+    }
+    .btn-close:focus {
+        outline: none;
+        box-shadow: none;
+    }
+    .btn-close:focus-visible {
+        outline: 2px solid #1e88e5;
+        outline-offset: 2px;
+    }
+    .btn-close:focus:not(:focus-visible) {
+        outline: none;
+    }
+    .alert-dismissible .btn-close {
+        position: relative;
+        top: -2px;
+        right: -10px;
+    }
+    .alert-dismissible .btn-close:focus {
+        outline: none;
+        box-shadow: none;
+    }
+    .alert-dismissible .btn-close:focus-visible {
+        outline: 2px solid #1e88e5;
+        outline-offset: 2px;
+    }
+    .alert-dismissible .btn-close:focus:not(:focus-visible) {
+        outline: none;
+    }
+    .alert-dismissible .btn-close:hover {
+        opacity: 1;
+    }
+    .alert-dismissible .btn-close:active {
+        transform: scale(0.95);
+    }
+    .alert-dismissible .btn-close:focus-visible {
+        outline: 2px solid #1e88e5;
+        outline-offset: 2px;
+    }
+
+    .alert-dismissible .btn-close:focus:not(:focus-visible) {
+        outline: none;
+    }
+    .alert-dismissible .btn-close:focus {
+        outline: none;
+        box-shadow: none;
+    }
+    .alert-dismissible .btn-close {
+        position: relative;
+        top: -2px;
+        right: -10px;
+    }
+    .alert-dismissible .btn-close:hover {
+        opacity: 1;
+    }
+    .alert-dismissible .btn-close:active {
+        transform: scale(0.95);
+    }
+    .alert-dismissible .btn-close:focus-visible {
+        outline: 2px solid #1e88e5;
+        outline-offset: 2px;
+    }
+    .alert-dismissible .btn-close:focus:not(:focus-visible) {
+        outline: none;
+    }
+    .alert-dismissible .btn-close:focus {
+        outline: none;
+        box-shadow: none;
+    }
+    .alert-dismissible .btn-close {
+        position: relative;
+        top: -2px;
+        right: -10px;
+    }
+    .alert-dismissible .btn-close:hover {
+        opacity: 1;
+    }
+    .alert-dismissible .btn-close:active {
+        transform: scale(0.95);
+    }
+    .alert-dismissible .btn-close:focus-visible {
+        outline: 2px solid #1e88e5;
+        outline-offset: 2px;
+    }
+    .alert-dismissible .btn-close:focus:not(:focus-visible) {
+        outline: none;
+    }
+    .alert-dismissible .btn-close:focus {
+        outline: none;
+        box-shadow: none;
+    }
+    .alert-dismissible .btn-close {
+        position: relative;
+        top: -2px;
+        right: -10px;
+    }
+</style>
+<div class="container mt-4">
+  <h2>✏️ Edit My Portfolio</h2>
+
+  <!-- Flash Messages -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <form method="POST" enctype="multipart/form-data" class="mt-4">
+    <div class="mb-3">
+      <label for="profile_pic" class="form-label">Profile Picture</label>
+      <input type="file" name="profile_pic" id="profile_pic" class="form-control">
+      {% if portfolio.profile_pic %}
+        <small class="text-muted">Current: {{ portfolio.profile_pic }}</small>
+      {% endif %}
+    </div>
+
+    <div class="mb-3">
+      <label for="resume" class="form-label">Resume (PDF)</label>
+      <input type="file" name="resume" id="resume" class="form-control">
+      {% if portfolio.resume %}
+        <small class="text-muted">Current: {{ portfolio.resume }}</small>
+      {% endif %}
+    </div>
+
+    <div class="mb-3">
+      <label for="certificates" class="form-label">Certificates (PDF/Image)</label>
+      <input type="file" name="certificates" id="certificates" class="form-control">
+      {% if portfolio.certificates %}
+        <small class="text-muted">Current: {{ portfolio.certificates }}</small>
+      {% endif %}
+    </div>
+
+    <div class="mb-3">
+      <label for="achievements" class="form-label">Academic Achievements</label>
+      <textarea name="achievements" id="achievements" class="form-control" rows="3">{{ portfolio.achievements or '' }}</textarea>
+    </div>
+
+    <div class="mb-3">
+      <label for="skills" class="form-label">Skills</label>
+      <input type="text" name="skills" id="skills" class="form-control" value="{{ portfolio.skills or '' }}">
+    </div>
+
+    <div class="mb-3">
+      <label for="interests" class="form-label">Interests</label>
+      <input type="text" name="interests" id="interests" class="form-control" value="{{ portfolio.interests or '' }}">
+    </div>
+
+    <div class="mb-3">
+      <label for="github_link" class="form-label">GitHub Link</label>
+      <input type="url" name="github_link" id="github_link" class="form-control" value="{{ portfolio.github_link or '' }}">
+    </div>
+
+    <div class="mb-3">
+      <label for="linkedin_link" class="form-label">LinkedIn Link</label>
+      <input type="url" name="linkedin_link" id="linkedin_link" class="form-control" value="{{ portfolio.linkedin_link or '' }}">
+    </div>
+
+    <button type="submit" class="btn btn-success">💾 Save Changes</button>
+    <a href="{{ url_for('portfolio.view_portfolio') }}" class="btn btn-secondary">Cancel</a>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,213 @@
+{% extends "base.html" %}
+{% block title %}Edit Group - {{ group.name }}{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background: linear-gradient(135deg, #fddb92, #d1fdff);
+        background-size: 300% 300%;
+        animation: bgShift 18s ease infinite;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #333;
+    }
+
+    @keyframes bgShift {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+    }
+
+    .container {
+        max-width: 650px;
+        margin: 3rem auto;
+        padding: 2.5rem;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 18px;
+        box-shadow: 0 14px 40px rgba(0, 0, 0, 0.12);
+        backdrop-filter: blur(12px);
+        animation: fadeIn 0.6s ease-in-out;
+    }
+
+    h3 {
+        font-size: 1.9rem;
+        font-weight: 700;
+        color: #2e3a59;
+        margin-bottom: 2rem;
+    }
+
+    h3 .text-primary {
+        color: #1976d2;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #37474f;
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+
+    .form-control {
+        padding: 0.75rem 1rem;
+        border-radius: 10px;
+        border: 1px solid #ccc;
+        transition: all 0.25s ease;
+        font-size: 1rem;
+    }
+
+    .form-control:focus {
+        border-color: #1976d2;
+        box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.15);
+        outline: none;
+    }
+
+    .btn-success {
+        background: linear-gradient(90deg, #43cea2, #185a9d);
+        border: none;
+        border-radius: 30px;
+        color: white;
+        font-size: 1rem;
+        font-weight: 600;
+        padding: 0.75rem 2rem;
+        transition: all 0.3s ease;
+    }
+
+    .btn-success:hover {
+        background: linear-gradient(90deg, #2bc0e4, #1f4c81);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-primary, .btn-secondary {
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        padding: 0.75rem 1.5rem;
+        transition: background 0.3s ease, transform 0.2s ease;
+        cursor: pointer;
+    }
+
+    .btn-primary {
+        background: linear-gradient(90deg, #4a90e2, #50e3c2);
+        color: #fff;
+    }
+
+    .btn-primary:hover {
+        background: linear-gradient(90deg, #88a8cc, #9eb4d5);
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+        transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+        background: #6c757d;
+        color: #fff;
+    }
+
+    .btn-secondary:hover {
+        background: #5a6268;
+        transform: translateY(-2px);
+    }
+
+    .text-danger {
+        color: #d32f2f;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+
+    .text-danger.small {
+        font-size: 0.85rem;
+    }
+
+    .alert {
+        margin-top: 1rem;
+        padding: 1rem 1.25rem;
+        border-radius: 10px;
+        font-weight: 500;
+        background-color: #f8d7da;
+        color: #721c24;
+        animation: fadeIn 0.3s ease;
+    }
+
+    .alert-dismissible .btn-close {
+        top: 0.75rem;
+        right: 1rem;
+    }
+
+    .text-center a {
+        color: #1e88e5;
+        font-weight: 500;
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+
+    .text-center a:hover {
+        color: #1565c0;
+        text-decoration: underline;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+
+<div class="container mt-4">
+    <h3 class="mb-4 text-center">✏️ Edit Study Group - <span class="text-primary">{{ group.name }}</span></h3>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <!-- ✅ Edit Group Form -->
+    <form method="POST" class="border p-4 rounded shadow-sm bg-light">
+        {{ form.hidden_tag() }}
+
+        <!-- Group Name -->
+        <div class="mb-3">
+            {{ form.name.label(class="form-label fw-semibold") }}
+            {{ form.name(class="form-control", placeholder="Enter group name") }}
+            {% for error in form.name.errors %}
+                <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <!-- Group Description -->
+        <div class="mb-3">
+            {{ form.description.label(class="form-label fw-semibold") }}
+            {{ form.description(class="form-control", placeholder="Enter group description") }}
+            {% for error in form.description.errors %}
+                <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <!-- Group Code -->
+        <div class="mb-3">
+            {{ form.group_code.label(class="form-label fw-semibold") }}
+            {{ form.group_code(class="form-control", placeholder="Enter group code") }}
+            {% for error in form.group_code.errors %}
+                <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <!-- Group Password -->
+        <div class="mb-3">
+            {{ form.password.label(class="form-label fw-semibold") }}
+            {{ form.password(class="form-control", placeholder="Enter group password") }}
+            {% for error in form.password.errors %}
+                <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <!-- Submit Button -->
+        <div class="text-center mt-4">
+            {{ form.submit(class="btn btn-success px-4") }}
+        </div>
+    </form>
+</div>
+{% endblock %}

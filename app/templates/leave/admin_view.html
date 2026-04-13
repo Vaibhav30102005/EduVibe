@@ -1,0 +1,420 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+    body {
+        background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
+        background-size: 400% 400%;
+        animation: bgGradient 20s ease infinite;
+    }
+
+    @keyframes bgGradient {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    .container {
+        max-width: 800px;
+        margin: auto;
+        padding: 2rem;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 16px;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    h2 {
+        font-weight: bold;
+        color: #1a237e;
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        font-weight: bold;
+        color: #303f9f;
+    }
+
+    .form-control {
+        border-radius: 8px;
+        border: 1px solid #ced4da;
+        padding: 0.5rem 1rem;
+        margin-bottom: 1rem;
+        width: 100%;
+    }
+
+    .form-control:focus {
+        border-color: #1a237e;
+        box-shadow: inset 0 0 0.2rem rgba(26, 35, 126, 0.25);
+    }
+
+    .btn-primary {
+        background: linear-gradient(90deg, #c1dbf1, #b0c5de);
+        border: none;
+        border-radius: 12px;
+        font-weight: 600;
+        color: #fff;
+        padding: 0.6rem 1.2rem;
+        transition: background 0.3s ease, transform 0.2s ease;
+    }
+    .btn-primary:hover {
+        background: linear-gradient(90deg, #88a8cc, #9eb4d5);
+        transform: translateY(-2px);
+    }
+    .btn-secondary {
+        background: #6c757d;
+        color: white;
+        border-radius: 8px;
+        padding: 0.75rem 1.5rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.3s ease, transform 0.2s ease;
+    }
+    .btn-secondary:hover {
+        background: #5a6268;
+        transform: translateY(-2px);
+    }
+    .alert {
+        margin-top: 1rem;
+        padding: 1rem;
+        border-radius: 8px;
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+    .text-danger.small {
+        font-size: 0.85rem;
+        color: #dc3545;
+    }
+    .text-muted {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+    .text-center a {
+        color: #1e88e5;
+        font-weight: 500;
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+    .text-center a:hover {
+        color: #1565c0;
+        text-decoration: underline;
+    }
+    .fade-in {
+        animation: fadeIn 0.5s ease-in-out;
+    }
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .mb-3 {
+        margin-bottom: 1.5rem;
+    }
+    .mt-4 {
+        margin-top: 2rem;
+    }
+    .d-grid {
+        display: grid;
+        gap: 1rem;
+    }
+    .d-grid .btn {
+        width: 100%;
+        padding: 0.75rem;
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: #fff;
+        background-color: #1e88e5;
+        border-radius: 8px;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    .d-grid .btn:hover {
+        background-color: #1565c0;
+        transform: translateY(-2px);
+    }
+    .d-grid .btn-secondary {
+        background-color: #6c757d;
+        color: #fff;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    .d-grid .btn-secondary:hover {
+        background-color: #5a6268;
+        transform: translateY(-2px);
+    }
+    .alert-success {
+        background-color: #d4edda;
+        color: #155724;
+    }
+    .alert-danger {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+    .text-muted {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+    .text-center a {
+        color: #1e88e5;
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.2s ease;
+    }
+    .text-center a:hover {
+        color: #0d47a1;
+    }
+    .mb-3 {
+        margin-bottom: 1.5rem;
+    }
+    .mt-4 {
+        margin-top: 2rem;
+    }
+    .card {
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        background-color: #ffffff;
+    }
+    .card-header {
+        background: linear-gradient(90deg, #1e88e5, #1565c0);
+        color: white;
+        border-radius: 16px 16px 0 0;
+        padding: 1rem;
+        font-size: 1.25rem;
+        font-weight: bold;
+    }
+    .card-body {
+        padding: 2rem;
+    }
+    .card-body form {
+        margin-bottom: 1.5rem;
+    }
+    .card-body form .mb-3 {
+        margin-bottom: 1.2rem;
+    }
+    .card-body form .form-control {
+        border-radius: 10px;
+        border: 1px solid #ced4da;
+        transition: all 0.3s ease;
+        box-shadow: none;
+        background-color: #f5faff;
+        padding: 0.5rem 0.75rem;
+    }
+    .card-body form .form-control:focus {
+        border-color: #1e88e5;
+        box-shadow: 0 0 0 0.15rem rgba(30, 136, 229, 0.3);
+        outline: none;
+        background-color: #ffffff;
+        color: #212529;
+    }
+    .text-danger {
+        color: #d32f2f;
+        font-size: 0.875rem;
+        margin-top: 0.5rem;
+    }
+    .text-center {
+        text-align: center;
+        margin-top: 1.5rem;
+    }
+    .text-center a {
+        color: #1e88e5;
+        font-weight: 500;
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+    .text-center a:hover {
+        color: #1565c0;
+        text-decoration: underline;
+    }
+    .text-center a:focus {
+        outline: none;
+        color: #0d47a1;
+    }
+    .fade-in {
+        animation: fadeIn 0.5s ease-in-out;
+    }
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    .btn-close {
+        color: #000;
+        opacity: 0.5;
+    }
+    .btn-close:hover {
+        opacity: 1;
+    }
+    .btn-close:focus {
+        outline: none;
+        box-shadow: none;
+    }
+    .btn-close:focus-visible {
+        outline: 2px solid #1e88e5;
+        outline-offset: 2px;
+    }
+    .btn-close:focus:not(:focus-visible) {
+        outline: none;
+    }
+    .alert-dismissible .btn-close {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        z-index: 1;
+    }
+    .alert-dismissible .btn-close:focus {
+        outline: none;
+        box-shadow: none;
+    }
+    .alert-dismissible .btn-close:focus-visible {
+        outline: 2px solid #1e88e5;
+        outline-offset: 2px;
+    }
+    .alert-dismissible .btn-close:focus:not(:focus-visible) {
+        outline: none;
+    }
+    .alert-dismissible .btn-close:hover {
+        opacity: 1;
+    }
+
+    .alert-dismissible {
+        position: relative;
+        padding-right: 2.5rem;
+    }
+    .alert-dismissible .btn-close {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        z-index: 1;
+    }
+    .alert-dismissible .btn-close:focus {
+        outline: none;
+        box-shadow: none;
+    }
+    .alert-dismissible .btn-close:focus-visible {
+        outline: 2px solid #1e88e5;
+        outline-offset: 2px;
+    }
+    .alert-dismissible .btn-close:focus:not(:focus-visible) {
+        outline: none;
+    }
+    .alert-dismissible .btn-close:hover {
+        opacity: 1;
+    }
+    .alert-dismissible .btn-close:active {
+        transform: scale(0.95);
+    }
+    .alert-dismissible .btn-close:focus-visible {
+        outline: 2px solid #1e88e5;
+        outline-offset: 2px;
+    }
+    .alert-dismissible .btn-close:focus:not(:focus-visible) {
+        outline: none;
+    }
+    .alert-dismissible .btn-close:focus {
+        outline: none;
+        box-shadow: none;
+    }
+    .alert-dismissible .btn-close {
+        position: relative;
+        top: -2px;
+        right: -10px;
+    }
+    .alert-dismissible .btn-close:hover {
+        opacity: 1;
+    }
+    .alert-dismissible .btn-close:active {
+        transform: scale(0.95);
+    }
+    .alert-dismissible .btn-close:focus-visible {
+        outline: 2px solid #1e88e5;
+        outline-offset: 2px;
+    }
+    .alert-dismissible .btn-close:focus:not(:focus-visible) {
+        outline: none;
+    }
+    </style>
+<div class="container mt-4">
+  <h3 class="mb-4">📂 All Leave Applications</h3>
+
+  {% if applications %}
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+          <tr>
+            <th>#</th>
+            <th>Student</th>
+            <th>Roll No</th>
+            <th>Branch</th>
+            <th>Semester</th>
+            <th>Reason</th>
+            <th>Document</th>
+            <th>Status</th>
+            <th>Submitted On</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for app in applications %}
+          <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ app.user.name }}</td>
+            <td>{{ app.user.roll_no }}</td>
+            <td>{{ app.user.branch }}</td>
+            <td>{{ app.user.semester }}</td>
+            <td>{{ app.reason }}</td>
+            <td>
+              {% if app.document_path %}
+                <a href="{{ url_for('static', filename='uploads/leave_docs/' + app.document_path) }}" target="_blank">Download</a>
+              {% else %}
+                <span class="text-muted">N/A</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if app.status == 'Approved' %}
+                <span class="badge bg-success">{{ app.status }} ✅</span>
+              {% elif app.status == 'Rejected' %}
+                <span class="badge bg-danger">{{ app.status }}</span>
+              {% else %}
+                <span class="badge bg-warning text-dark">{{ app.status }}</span>
+              {% endif %}
+            </td>
+            <td>{{ app.timestamp.strftime('%d %b %Y, %I:%M %p') }}</td>
+            <td>
+              {% if app.status == 'Pending' %}
+                <form method="post" action="{{ url_for('leave.approve_application', application_id=app.id) }}">
+                  <button type="submit" name="action" value="approve" class="btn btn-success btn-sm mb-1">✅ Approve</button>
+                  <button type="submit" name="action" value="reject" class="btn btn-danger btn-sm">❌ Reject</button>
+                </form>
+              {% else %}
+                <span class="text-muted">Reviewed</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="alert alert-info">No leave applications found.</div>
+  {% endif %}
+</div>
+{% endblock %}
