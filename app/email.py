@@ -1,7 +1,6 @@
-from flask_mail import Message
 import os
-from flask_mail import Message
-from app import mail
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
 
 def send_otp_email(user_email, otp, purpose="verification"):
 
@@ -16,7 +15,6 @@ Your password reset OTP is:
 
 If you did not request this, please ignore this email.
 """
-
     else:
         subject = "EduVibe Email Verification"
         message = f"""
@@ -29,12 +27,18 @@ Your email verification code is:
 Enter this code to complete registration.
 """
 
-    msg = Message(
-        subject=subject,
-        sender=os.getenv("MAIL_USERNAME"),
-        recipients=[user_email]
-    )
+    try:
+        email = Mail(
+            from_email=os.getenv("MAIL_DEFAULT_SENDER"),
+            to_emails=user_email,
+            subject=subject,
+            plain_text_content=message
+        )
 
-    msg.body = message
+        sg = SendGridAPIClient(os.getenv("SENDGRID_API_KEY"))
+        response = sg.send(email)
 
-    mail.send(msg)
+        print("Email sent successfully:", response.status_code)
+
+    except Exception as e:
+        print("SendGrid Error:", e)
