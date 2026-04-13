@@ -3,7 +3,7 @@
 from flask import Flask, request, redirect, flash, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
-from flask_mail import Mail
+from sendgrid import SendGridAPIClient
 from dotenv import load_dotenv
 import os
 
@@ -18,7 +18,7 @@ UPLOAD_FOLDER = os.path.join(BASE_DIR, 'static/uploads/portfolio')
 # ─────────────────────────────
 db = SQLAlchemy()
 login_manager = LoginManager()
-mail = Mail()
+
 
 # ─────────────────────────────
 # 🔹 App Factory Function
@@ -49,7 +49,7 @@ def create_app():
     # ✅ Initialize Extensions
     db.init_app(app)
     login_manager.init_app(app)
-    mail.init_app(app)
+    
 
     # ✅ Login Configuration
     login_manager.login_view = 'auth.login'
