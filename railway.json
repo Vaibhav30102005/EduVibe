@@ -1,3 +1,0 @@
-{
-  "startCommand": "gunicorn run:app"
-}
